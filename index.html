@@ -3,18 +3,76 @@
   <head>
     <meta charset="utf-8">
     <title>Mconomy</title>
-    <link rel="stylesheet" href="normalize.css">
   </head>
   <style>
-    .legend {
-      font-size: 12px;
-    }
-    rect {
-      stroke-width: 2;
-    }
+table {
+border-collapse: collapse;
+/*font: 10px sans-serif;
+/*width: 720px;*/
+}
+
+th {
+font-weight: normal;
+text-align: right;
+padding-right: 6px;
+/*min-width: 43px;*/
+}
+
+thead td, thead th {
+cursor: s-resize;
+}
+
+tbody tr:first-child td {
+padding-top: 2px;
+}
+
+tbody td {
+padding: 0;
+height: 20px;
+border-left: solid 1px #000;
+}
+
+tbody rect {
+fill: steelblue;
+}
+
+tbody tr:hover rect {
+fill: brown;
+}
+tbody tr:hover {
+    background-color: #eeeeee;
+}
+.number {
+    text-align: right;
+    padding-right: 2px;
+    padding-left: 2px;
+}
   </style>
   <body>
     <div id="chart"></div>
-    <script src="/bower_components/d3/d3.min.js"></script>
+    <table>
+        <thead>
+            <tr>
+                <th>Country</th>
+                <td></td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <script src="/bower_components/d3/d3.js"></script>
+    <script src="table2.js"></script>
+    <script>
+      (function(d3) {
+        'use strict';
+
+        d3.json('data.json', function(err, data) {
+            console.log(data);
+            table(data.map(function(d) { return { name: d.name, value: d.nMacs.percapita }; }), window.innerWidth, window.innerHeight*4);
+        });
+
+      })(window.d3);
+    </script>
   </body>
 </html>
