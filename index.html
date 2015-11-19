@@ -54,8 +54,13 @@ tbody tr:hover {
         <thead>
             <tr>
                 <th>Country</th>
-                <td></td>
-                <td></td>
+                <td>Value</td>
+                <td>
+                    <select id="table-changer">
+                        <option value="nMacs.percapita">McsPercapita</option>
+                        <option value="nMacs.value">Number of mcdonalds</option>
+                    </select>
+                </td>
             </tr>
         </thead>
         <tbody>
@@ -68,8 +73,17 @@ tbody tr:hover {
         'use strict';
 
         d3.json('data.json', function(err, data) {
-            console.log(data);
-            table(data.map(function(d) { return { name: d.name, value: d.nMacs.percapita }; }), window.innerWidth, window.innerHeight*4);
+            var tableUpdater = table(data.map(function(d) { return { name: d.name, value: d.nMacs.percapita }; }), window.innerWidth, window.innerHeight*4);
+            document.querySelector("#table-changer").addEventListener("change", function(e) {
+                var option = e.target.value;
+                var fields = option.split('.');
+                tableUpdater(data.map(function(d) {
+                    return {
+                        name: d.name,
+                        value: d[fields[0]][fields[1]]
+                    };
+                }));
+            });
         });
 
       })(window.d3);
