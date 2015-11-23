@@ -5,6 +5,23 @@
     <title>Mconomy</title>
   </head>
   <style>
+body {
+	font: 10px sans-serif;
+}
+
+.bar rect {
+	fill: steelblue;
+}
+
+.bar text {
+	fill: white;
+}
+
+.axis path, .axis line {
+	fill: none;
+	stroke: black;
+	shape-rendering: crispEdges;
+}
 table {
 border-collapse: collapse;
 /*font: 10px sans-serif;
@@ -67,7 +84,7 @@ tbody tr:hover {
         </tbody>
     </table>
     <script src="/bower_components/d3/d3.js"></script>
-    <script src="table2.js"></script>
+    <script src="table.js"></script>
     <script>
       (function(d3) {
         'use strict';
