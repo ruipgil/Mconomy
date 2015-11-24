@@ -63,6 +63,7 @@ tbody tr:hover {
   </style>
   <body>
     <div id="chart"></div>
+    <div id="table"> 
     <table>
         <thead>
             <tr>
@@ -89,8 +90,11 @@ tbody tr:hover {
         <tbody>
         </tbody>
     </table>
-    <script src="/bower_components/d3/d3.js"></script>
+  </div>
+    <div id=radar></div>
+    <script src="./bower_components/d3/d3.js"></script>
     <script src="table.js"></script>
+    <script src="radar.js"></script>
     <script>
       (function(d3) {
         'use strict';
@@ -123,6 +127,47 @@ tbody tr:hover {
         });
 
       })(window.d3);
+
+
+      var dataRadar = [
+        [
+        {axis:"PIPI", value:15},
+        {axis:"PEPE", value:15},
+        {axis:"POPO", value:15}
+        ],[
+        {axis:"PIPI", value:10},
+        {axis:"PEPE", value:17},
+        {axis:"POPO", value:15}
+        ],[
+        {axis:"PIPI", value:5},
+        {axis:"PEPE", value:12},
+        {axis:"POPO", value:15}
+        ]
+      ];
+
+      var margin = {top: 100, right: 100, bottom: 100, left: 100},
+        width = Math.min(700, window.innerWidth - 10) - margin.left - margin.right,
+        height = Math.min(width, window.innerHeight - margin.top - margin.bottom - 20);
+
+
+      var color = d3.scale.ordinal()
+        .range(["#EDC951","#CC333F","#00A0B0"]);
+        
+      var radarChartOptions = {
+        w: width,
+        h: height,
+        margin: margin,
+        maxValue: 0.5,
+        levels: 5,
+        roundStrokes: true,
+        color: color
+      };
+
+      RadarChart("#radar", dataRadar, radarChartOptions);
+
+      function radarMapper(d){
+
+      }
     </script>
   </body>
 </html>
