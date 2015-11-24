@@ -36,9 +36,9 @@ var sortTable = {
 function table(data, w, h) {
   var originalData = data;
 
-  var m = [30, 10, 10, 120],
-    w = 960 - m[1] - m[3],
-    h = 930*2 - m[0] - m[2];
+  var m = [30, 10, 10, 120];
+  var w = 960 - m[1] - m[3];
+  var h = 930*2 - m[0] - m[2];
 
   var s = sortTable["123"](data);
   data = s.data;
@@ -46,14 +46,12 @@ function table(data, w, h) {
 
   var format = d3.format(",.0f");
 
-  var x = d3.scale.linear().range([0, w]),
-    y = d3.scale.ordinal().rangeRoundBands([0, h], .1),
-    ny = d3.scale.ordinal().rangeRoundBands([0, h], .1);
+  var x = d3.scale.linear().range([0, w]);
+  var y = d3.scale.ordinal().rangeRoundBands([0, h], .1);
 
-  var xAxis = d3.svg.axis().scale(x).orient("top").tickSize(-h),
-    yAxis = d3.svg.axis().scale(y).orient("left").tickSize(0);
+  var xAxis = d3.svg.axis().scale(x).orient("top").tickSize(-h).tickFormat(format);
+  var yAxis = d3.svg.axis().scale(y).orient("left").tickSize(0);
 
-  var numberAxis = d3.svg.axis().scale(ny).orient("left").tickSize(0);
 
   var svg = d3.select("body").append("svg")
   .attr("width", w + m[1] + m[3])
@@ -64,7 +62,6 @@ function table(data, w, h) {
   // Set the scale domain.
   x.domain([0, d3.max(data, function(d) { return d.value; })]);
   y.domain(data.map(function(d) { return d.name; }));
-  ny.domain(data.map(function(d) { return d.value.toFixed(3); }));
 
   var bar = svg.selectAll("g.bar")
   .data(data)
@@ -92,7 +89,7 @@ function table(data, w, h) {
 
   svg.append("g")
   .attr("class", "y axis yyy")
-  .attr("transform", "translate(" + (-40) + ",0)")
+  .attr("transform", "translate(" + (-48) + ",0)")
   .call(yAxis);
 
   svg.append("g")
@@ -112,7 +109,6 @@ function table(data, w, h) {
   function updateSort() {
 
     y.domain(data.map(function(d) { return d.name; }));
-    ny.domain(data.map(function(d) { return d.value.toFixed(3); }));
 
     d3.selectAll(".yyy")
     .transition()
@@ -120,22 +116,15 @@ function table(data, w, h) {
     .ease("quad-in-out")
     .call(yAxis);
 
-    d3.selectAll(".ny")
-    .transition()
-    .duration(750)
-    .ease("quad-in-out")
-    .call(numberAxis);
-
     bar.transition()
     .duration(750)
     .ease("quad-in-out")
     .attr("transform", function(d) { return "translate(0," + y(d.name) + ")"; });
   }
 
-
   document.querySelector(".order-value")
   .addEventListener("click", function() {
-    if(sorting=="CBA" || sorting=="ABC") {
+    if(sorting=="CBA" || sorting=="ABC" || sorting=="???") {
       sorting = "321";
     }
     s = sortTable[sorting](data);
@@ -147,7 +136,7 @@ function table(data, w, h) {
 
   document.querySelector(".order-country")
   .addEventListener("click", function() {
-    if(sorting=="123" || sorting=="321") {
+    if(sorting=="123" || sorting=="321" || sorting=="???") {
       sorting = "CBA";
     }
     s = sortTable[sorting](data);
@@ -157,53 +146,46 @@ function table(data, w, h) {
     updateSort();
   });
 
-  /*svg.append("g")
-    .attr("class", "ny axis")
-    .call(numberAxis);*/
-
-  return function(newData) {
+  return function(newData, newFormat) {
     dMap = data.reduce(function(prev, curr, i) {
-        prev[curr.name] = i;
-        return prev;
-        }, {});
+      prev[curr.name] = i;
+      return prev;
+    }, {});
     data = newData.reduce(function(prev, curr, i) {
-        prev[dMap[curr.name]] = curr;
-        return prev;
-        }, []);
+      prev[dMap[curr.name]] = curr;
+      return prev;
+    }, []);
+    format = d3.format(newFormat) || format;
+    sorting = "???";
 
     x.domain([0, d3.max(data, function(d) { return d.value; })]);
     y.domain(data.map(function(d) { return d.name; }));
-    ny.domain(data.map(function(d) { return d.value.toFixed(3); }));
 
+    xAxis = d3.svg.axis().scale(x).orient("top").tickSize(-h).tickFormat(format);
+    yAxis = d3.svg.axis().scale(y).orient("left").tickSize(0);
+    d3.selectAll(".x")
+    .transition()
+    .duration(750)
+    .ease("quad-in-out")
+    .call(xAxis);
+    d3.selectAll(".yyy")
+    .transition()
+    .duration(750)
+    .ease("quad-in-out")
+    .call(yAxis);
 
-  xAxis = d3.svg.axis().scale(x).orient("top").tickSize(-h);
-  yAxis = d3.svg.axis().scale(y).orient("left").tickSize(0);
-  d3.selectAll(".x")
-  .transition()
-  .duration(750)
-  .ease("quad-in-out")
-  .call(xAxis);
-  d3.selectAll(".yyy")
-  .transition()
-  .duration(750)
-  .ease("quad-in-out")
-  .call(yAxis);
+    bar.data(data).transition()
+    .duration(750)
+    .attr("transform", function(d) { return "translate(0," + y(d.name) + ")"; })
+    .attr("x", function(d) { return x(d.value); });
+    bar.transition()
+    .duration(750)
+    .select("text")
+    .text(function(d) { return format(d.value); });
+    bar.transition()
+    .duration(750)
+    .select("rect")
+    .attr("width", function(d) { return x(d.value); });
 
-  bar.data(data).transition()
-  .duration(750)
-  .attr("transform", function(d) { return "translate(0," + y(d.name) + ")"; })
-  .attr("x", function(d) { return x(d.value); });
-  bar.transition()
-  .duration(750)
-  .select("text")
-  .text(function(d) { return format(d.value); });
-  bar.transition()
-  .duration(750)
-  .select("rect")
-  .attr("width", function(d) { return x(d.value); });
-
-  /*xAxis = xAxis.scale(x);
-    yAxis = yAxis.scale(y);
-    numberAxis = numberAxis.scale(ny);*/
   };
 }

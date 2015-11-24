@@ -72,6 +72,16 @@ tbody tr:hover {
                     <select id="table-changer">
                         <option value="nMacs.percapita">McsPercapita</option>
                         <option value="nMacs.value">Number of mcdonalds</option>
+                        <option value="bigmacIndex.burgersPerWage">Burgers per wage</option>
+                        <option value="bigmacIndex.toUs:,.2%">Burger price compared to United States</option>
+                        <option value="gdp.percapita">GDP per capita</option>
+                        <option value="hdi.hdi">Human Development Index</option>
+                        <option value="hdi.expectedSchool">Expected School years</option>
+                        <option value="hdi.lifeAtBirth">Life expectancy at birth</option>
+                        <option value="hdi.meanSchool">Mean school years</option>
+                        <option value="hdi.gni">GNI</option>
+                        <option value="wage">Wage</option>
+                        <option value="population">Population</option>
                     </select>
                 </td>
             </tr>
@@ -86,16 +96,29 @@ tbody tr:hover {
         'use strict';
 
         d3.json('data.json', function(err, data) {
+          console.log(data);
             var tableUpdater = table(data.map(function(d) { return { name: d.name, value: d.nMacs.percapita }; }), window.innerWidth, window.innerHeight*4);
             document.querySelector("#table-changer").addEventListener("change", function(e) {
                 var option = e.target.value;
-                var fields = option.split('.');
-                tableUpdater(data.map(function(d) {
+                var vals = option.split(':');
+                var fields = vals[0].split('.');
+                var mapper;
+                if (fields.length == 2) {
+                  mapper = data.map(function(d) {
                     return {
+                      name: d.name,
+                      value: d[fields[0]][fields[1]]
+                      };
+                    })
+                    } else {
+                    mapper = data.map(function(d) {
+                      return {
                         name: d.name,
-                        value: d[fields[0]][fields[1]]
-                    };
-                }));
+                        value: d[fields[0]]
+                        };
+                        });
+                      }
+                tableUpdater(mapper, vals[1]?vals[1]:",.0f");
             });
         });
 
