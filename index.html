@@ -5,8 +5,11 @@
     <title>Mconomy</title>
   </head>
   <style>
-body {
+html, body {
 	font: 10px sans-serif;
+  width: 100%;
+  height: 100%;
+  margin: 0;
 }
 
 .bar rect {
@@ -60,35 +63,69 @@ tbody tr:hover {
     padding-right: 2px;
     padding-left: 2px;
 }
+#container div {
+  margin: 0;
+  padding: 0;
+}
+#containers {
+  width: 100%;
+  height: 100%;
+}
+#mapContainer {
+  width: 70%;
+  height: 40%;
+  background: #eee;
+  display: inline-block;
+}
+#tableContainer {
+  width: 30%;
+  height: 100%;
+  background: #ddd;
+  float: right;
+  overflow: scroll;
+}
+#plotContainer {
+  width: 35%;
+  height: 60%;
+  background: #ccc;
+  display: inline-block;
+  float: left;
+}
+#radarContainer {
+  width: 35%;
+  height: 60%;
+  background: #bbb;
+  display: inline-block;
+}
   </style>
   <body>
-    <div id="chart"></div>
-    <table>
-        <thead>
-            <tr>
-                <th>Country</th>
-                <td>Value</td>
-                <td>
-                    <select id="table-changer">
-                        <option value="nMacs.percapita">McsPercapita</option>
-                        <option value="nMacs.value">Number of mcdonalds</option>
-                        <option value="bigmacIndex.burgersPerWage">Burgers per wage</option>
-                        <option value="bigmacIndex.toUs:,.2%">Burger price compared to United States</option>
-                        <option value="gdp.percapita">GDP per capita</option>
-                        <option value="hdi.hdi">Human Development Index</option>
-                        <option value="hdi.expectedSchool">Expected School years</option>
-                        <option value="hdi.lifeAtBirth">Life expectancy at birth</option>
-                        <option value="hdi.meanSchool">Mean school years</option>
-                        <option value="hdi.gni">GNI</option>
-                        <option value="wage">Wage</option>
-                        <option value="population">Population</option>
-                    </select>
-                </td>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+    <div id="containers">
+      <div id="mapContainer">
+      </div>
+      <div id="tableContainer">
+        <div>
+          <select id="table-changer">
+            <option value="nMacs.percapita">McsPercapita</option>
+            <option value="nMacs.value">Number of mcdonalds</option>
+            <option value="bigmacIndex.burgersPerWage">Burgers per wage</option>
+            <option value="bigmacIndex.toUs:,.2%">Burger price compared to United States</option>
+            <option value="gdp.percapita">GDP per capita</option>
+            <option value="hdi.hdi">Human Development Index</option>
+            <option value="hdi.expectedSchool">Expected School years</option>
+            <option value="hdi.lifeAtBirth">Life expectancy at birth</option>
+            <option value="hdi.meanSchool">Mean school years</option>
+            <option value="hdi.gni">GNI</option>
+            <option value="wage">Wage</option>
+            <option value="population">Population</option>
+          </select>
+        </div>
+      </div>
+      <div id="plotContainer">
+      </div>
+      <div id="radarContainer">
+      </div>
+    </div>
+    <div id="tableContainer"></div>
     <script src="/bower_components/d3/d3.js"></script>
     <script src="table.js"></script>
     <script>
@@ -97,7 +134,7 @@ tbody tr:hover {
 
         d3.json('data.json', function(err, data) {
           console.log(data);
-            var tableUpdater = table(data.map(function(d) { return { name: d.name, value: d.nMacs.percapita }; }), window.innerWidth, window.innerHeight*4);
+            var tableUpdater = table(data.map(function(d) { return { name: d.name, value: d.nMacs.percapita }; }), window.innerWidth*0.3, window.innerHeight*4);
             document.querySelector("#table-changer").addEventListener("change", function(e) {
                 var option = e.target.value;
                 var vals = option.split(':');

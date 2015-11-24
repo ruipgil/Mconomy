@@ -1,3 +1,9 @@
+/*
+ * TODO
+ *  + select and restrict
+ *  + fix format representation
+ *  + keep x axis fixed on top
+ */
 var sortTable = {
   "ABC": function(data) {
     return {
@@ -33,11 +39,11 @@ var sortTable = {
   }
 };
 
-function table(data, w, h) {
+function table(data, ow, h) {
   var originalData = data;
 
   var m = [30, 10, 10, 120];
-  var w = 960 - m[1] - m[3];
+  var w = ow - m[1] - m[3];
   var h = 930*2 - m[0] - m[2];
 
   var s = sortTable["123"](data);
@@ -53,7 +59,7 @@ function table(data, w, h) {
   var yAxis = d3.svg.axis().scale(y).orient("left").tickSize(0);
 
 
-  var svg = d3.select("body").append("svg")
+  var svg = d3.select("#tableContainer").append("svg")
   .attr("width", w + m[1] + m[3])
   .attr("height", h + m[0] + m[2])
   .append("g")
