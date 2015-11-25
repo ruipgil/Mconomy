@@ -1,6 +1,6 @@
 function map(id,data){
   
-  //d3.select(window).on("resize", throttle);
+ d3.select(window).on("resize", throttle);
 
 var zoom = d3.behavior.zoom()
     .scaleExtent([1, 8])
@@ -66,7 +66,7 @@ function draw(topo) {
   var offsetL = document.getElementById('mapContainer').offsetLeft+(width/2)+40;
   var offsetT =document.getElementById('mapContainer').offsetTop+(height/2)+20;
 
-  /*//tooltips
+  //tooltips
   country
     .on("mousemove", function(d,i) {
       var mouse = d3.mouse(svg.node()).map( function(d) { return parseInt(d); } );
@@ -77,7 +77,7 @@ function draw(topo) {
       })
       .on("mouseout",  function(d,i) {
         tooltip.classed("hidden", true)
-      }); */
+      }); 
    
 }
 
