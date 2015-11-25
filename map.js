@@ -1,13 +1,13 @@
 function map(id,data){
   
-  d3.select(window).on("resize", throttle);
+  //d3.select(window).on("resize", throttle);
 
 var zoom = d3.behavior.zoom()
     .scaleExtent([1, 8])
     .on("zoom", move);
 
 var width = document.getElementById('mapContainer').offsetWidth-60;
-var height = width / 2;
+var height = document.getElementById('mapContainer').offsetHeight;
 
 var topo,projection,path,svg,g;
 
@@ -46,15 +46,23 @@ d3.json(data, function(error, world) {
 function draw(topo) {
 
   var country = g.selectAll(".country").data(topo);
+  
+  var max = d3.max(Object.keys(gMapData).map(function(key) {
+    return gMapData[key].nMacs.percapita;
+  }));
+  
+  var color = d3.scale.linear()
+    .domain([-1, 0, 1])
+    .range(["green", "white", "black"]);
 
   country.enter().insert("path")
       .attr("class", "country")
       .attr("d", path)
       .attr("id", function(d,i) { return d.id; })
       .attr("title", function(d,i) { return d.properties.name; })
-      .style("fill", function(d, i) { return d.properties.color; });
+      .style("fill", function(d, i) { if(!gMapData[d.properties.name]){console.log(d.properties.name)} return color( gMapData[d.properties.name]?(gMapData[d.properties.name].nMacs.percapita / max):-1 ); });
 
-  //ofsets plus width/height of transform, plsu 20 px of padding, plus 20 extra for tooltip offset off mouse
+  /*//ofsets plus width/height of transform, plsu 20 px of padding, plus 20 extra for tooltip offset off mouse
   var offsetL = document.getElementById('mapContainer').offsetLeft+(width/2)+40;
   var offsetT =document.getElementById('mapContainer').offsetTop+(height/2)+20;
 
@@ -69,7 +77,7 @@ function draw(topo) {
       })
       .on("mouseout",  function(d,i) {
         tooltip.classed("hidden", true)
-      }); 
+      }); */
    
 }
 

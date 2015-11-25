@@ -133,6 +133,7 @@ tbody tr:hover {
     <script src="radar.js"></script>
     <script src="map.js"></script> //FF
     <script>
+      gMapData = null;
       (function(d3) {
         'use strict';
 
@@ -161,6 +162,12 @@ tbody tr:hover {
                       }
                 tableUpdater(mapper, vals[1]?vals[1]:",.0f");
             });
+	  var countryMap = data.reduce(function(prev, curr) {
+	    prev[curr.name] = curr;
+	    return prev;
+	  }, {});
+	  gMapData = countryMap;
+	  console.log(countryMap);
         });
 
       })(window.d3);
