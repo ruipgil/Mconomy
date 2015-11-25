@@ -127,9 +127,11 @@ tbody tr:hover {
     </div>
    
     <script src="./bower_components/d3/d3.js"></script>
+    <script src="./bower_components/topojson.v1.min.js"></script> //FF
 
     <script src="table.js"></script>
     <script src="radar.js"></script>
+    <script src="map.js"></script> //FF
     <script>
       (function(d3) {
         'use strict';
@@ -203,6 +205,9 @@ tbody tr:hover {
       function radarMapper(d){
 
       }
+
+      map("#mapContainer","world-topo.json");
+
     </script>
   </body>
 </html>
