@@ -6,7 +6,7 @@ var zoom = d3.behavior.zoom()
     .scaleExtent([1, 8])
     .on("zoom", move);
 
-var width = document.getElementById('mapContainer').offsetWidth-60;
+var width = document.getElementById('mapContainer').offsetWidth;
 var height = document.getElementById('mapContainer').offsetHeight;
 
 var topo,projection,path,svg,g;
@@ -18,7 +18,7 @@ setup(width,height);
 function setup(width,height){
   projection = d3.geo.mercator()
     .translate([0, 0])
-    .scale(width / 2 / Math.PI);
+    .scale(width / 2.2/ Math.PI);
 
   path = d3.geo.path()
       .projection(projection);
@@ -62,11 +62,11 @@ function draw(topo) {
       .attr("title", function(d,i) { return d.properties.name; })
       .style("fill", function(d, i) { if(!gMapData[d.properties.name]){console.log(d.properties.name)} return color( gMapData[d.properties.name]?(gMapData[d.properties.name].nMacs.percapita / max):-1 ); });
 
-  /*//ofsets plus width/height of transform, plsu 20 px of padding, plus 20 extra for tooltip offset off mouse
+  //ofsets plus width/height of transform, plsu 20 px of padding, plus 20 extra for tooltip offset off mouse
   var offsetL = document.getElementById('mapContainer').offsetLeft+(width/2)+40;
   var offsetT =document.getElementById('mapContainer').offsetTop+(height/2)+20;
 
-  //tooltips
+  /*//tooltips
   country
     .on("mousemove", function(d,i) {
       var mouse = d3.mouse(svg.node()).map( function(d) { return parseInt(d); } );
