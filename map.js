@@ -52,8 +52,8 @@ function draw(topo) {
   }));
   
   var color = d3.scale.linear()
-    .domain([-1, 0, 1])
-    .range(["green", "white", "black"]);
+    .domain([-1, 0, 0.5, 1])
+    .range(["white","#deebf7","#9ecae1","#3182bd"]);
 
   country.enter().insert("path")
       .attr("class", "country")
