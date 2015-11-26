@@ -181,7 +181,9 @@ div.tooltip {
             return {
               name: d.name,
               x: d.nMacs.percapita,
-              y: d.gdp.percapita
+              y: d.gdp.percapita,
+              r: d.hdi.value,
+              c: d.gdp.percapita
             };
           }), p.clientWidth, p.clientHeight);
             var tableUpdater = table(data.map(function(d) { return { name: d.name, value: d.nMacs.percapita }; }), t.clientWidth, window.innerHeight*4);

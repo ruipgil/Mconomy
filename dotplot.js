@@ -9,6 +9,15 @@ function dotplot(data, ow, oh) {
   var y = d3.scale.linear()
   .range([height, 0]);
 
+  var rMax = d3.max(data.map(function(d) { return d.r; }));
+  var r = d3.scale.linear()
+  .domain([0, 0.5, 1]);
+
+  var cMax = d3.max(data.map(function(d) { return d.c; }));
+  var c = d3.scale.linear()
+  .domain([0, 0.5, 1])
+  .range(["#deebf7","#9ecae1","#3182bd"]);
+
   var svg = d3.select("#plotContainer").append("svg")
   .attr("width", width + margin.left + margin.right)
   .attr("height", height + margin.top + margin.bottom)
@@ -35,10 +44,12 @@ function dotplot(data, ow, oh) {
   .data(data)
   .enter().append("path")
   .attr("class", "point")
-  .attr("d", d3.svg.symbol().type("circle").size(3))
   .attr("d", function(d) {
-    var a = d3.svg.symbol().type("circle").size(d.r||64)();
+    var a = d3.svg.symbol().type("circle").size(d.r?r(d.r/rMax)*512:64)();
     return a;
+  })
+  .attr("fill", function(d) {
+    return c(d.c/cMax || 0);
   })
   .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
 };
