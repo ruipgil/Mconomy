@@ -1,17 +1,68 @@
-/*function radar(data, w, h) {
-  var w = 200;
-  var h = 200;
+function radar(id, data, selection) {
+  //Mapa com os nomes dos paises e todos os dados
+    var countryDataMap = data.reduce(function(prev, curr) {
+      prev[curr.name] = curr;
+      return prev;
+      }, {});
+     // countryDataMap["Portugal"].nrMacs
+     var maxValues = [0, 0, 0, 0 , 0 , 0];
+      
+    
+    for(var i = 0; i < selection.length; i++){
+      if(countryDataMap[selection[i]].nMacs.percapita > maxValues[0]){
+        maxValues[0] = countryDataMap[selection[i]].nMacs.percapita;
+      }
+      if(countryDataMap[selection[i]].hdi.hdi > maxValues[1]){
+        maxValues[1] = countryDataMap[selection[i]].hdi.hdi;
+      }
+      if(countryDataMap[selection[i]].bigmacIndex.burgersPerWage > maxValues[2]){
+        maxValues[2] = countryDataMap[selection[i]].bigmacIndex.burgersPerWage;
+      }
+      if(countryDataMap[selection[i]].gdp.percapita > maxValues[3]){
+        maxValues[3] = countryDataMap[selection[i]].gdp.percapita;
+      }
+      if(countryDataMap[selection[i]].bmi[">=25.0"] > maxValues[4]){
+        maxValues[4] = countryDataMap[selection[i]].bmi[">=25.0"];
+      }
+      if(countryDataMap[selection[i]].death.macsPer > maxValues[5]){
+        maxValues[5] = countryDataMap[selection[i]].death.macsPer;
+      }
+      
+    }
+    
+    var dataRadar = new Array(selection.length);
+    for(var i = 0; i < selection.length; i++){
+     dataRadar[i] = [{axis: "nrMacsCapita", value: countryDataMap[selection[i]].nMacs.percapita / maxValues[0]},
+    {axis: "HDI", value: countryDataMap[selection[i]].hdi.hdi / maxValues[1]},
+    {axis: "BurgersPerWage", value: countryDataMap[selection[i]].bigmacIndex.burgersPerWage / maxValues[2] }, 
+    {axis: "GDPPerCapita", value: countryDataMap[selection[i]].gdp.percapita / maxValues[3] },
+    {axis: "BMI>25", value: countryDataMap[selection[i]].bmi[">=25.0"] / maxValues[4] },
+    {axis: "MacsPerDeath", value: countryDataMap[selection[i]].death.macsPer / maxValues[5] }]
+    }
+    
+    console.log(dataRadar);
+    
+    
+    var margin = {top: 60, right: 60, bottom: 80, left: 60},
+        width = document.getElementById('radarContainer').clientWidth - margin.right - margin.left,
+        height = document.getElementById('radarContainer').clientHeight - margin.top - margin.bottom ;
 
-  var svg = d3.select("#radar")
-    .append("svg")
-    .attr("width", w)
-    .attr("height", h);
 
-    svg.append("rect")
-      .attr("width", 20)
-      .attr("height", 100)
-      .attr("fill", "purple");
-}*/
+      var color = d3.scale.ordinal()
+        .range(["#EDC951","#CC333F","#00A0B0"]);
+        
+      var radarChartOptions = {
+        w: Math.min(width, height),
+        h: Math.min(height, width),
+        margin: margin,
+        maxValue: 1,
+        levels: 5,
+        roundStrokes: true,
+        color: color
+      };
+    
+    RadarChart(id, dataRadar, radarChartOptions)
+}
 
 function RadarChart(id, data, options) {
   var cfg = {
@@ -131,12 +182,12 @@ function RadarChart(id, data, options) {
 
   //Append the labels at each axis
   axis.append("text")
-    .attr("class", "legend")
+    .attr("class", "legendR")
     .style("font-size", "11px")
     .attr("text-anchor", "middle")
     .attr("dy", "0.35em")
     .attr("x", function(d, i){ return rScale(maxValue * cfg.labelFactor) * Math.cos(angleSlice*i - Math.PI/2); })
-    .attr("y", function(d, i){ return rScale(maxValue * cfg.labelFactor) * Math.sin(angleSlice*i - Math.PI/2); })
+    .attr("y", function(d, i){ console.log(d , rScale(maxValue * cfg.labelFactor) * Math.cos(angleSlice*i - Math.PI/2) , rScale(maxValue * cfg.labelFactor) * Math.sin(angleSlice*i - Math.PI/2)); return rScale(maxValue * cfg.labelFactor) * Math.sin(angleSlice*i - Math.PI/2); })
     .text(function(d){return d})
     .call(wrap, cfg.wrapWidth);
 
@@ -242,7 +293,7 @@ function RadarChart(id, data, options) {
     
   //Set up the small tooltip for when you hover over a circle
   var tooltip = g.append("text")
-    .attr("class", "tooltip")
+    .attr("class", "tooltipR")
     .style("opacity", 0);
   
   /////////////////////////////////////////////////////////

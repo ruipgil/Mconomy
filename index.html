@@ -122,6 +122,16 @@ div.tooltip {
   background: #bbb;
   display: inline-block;
 }
+
+.legendR {
+  font-family: 'Raleway', sans-serif;
+  fill: #333333;
+}
+      
+.tooltipR {
+  fill: #333333;
+}
+
   </style>
   <body>
     <div id="containers">
@@ -193,50 +203,18 @@ div.tooltip {
 	  }, {});
 	  gMapData = countryMap;
 	  console.log(countryMap);
+
+    //DURO DURO DURO DURO DURO
+    var arr = ["Portugal", "Argentina", "Brazil"];
+    //Chamar o radar chart no final do codigo do rui
+    radar("#radarContainer", data, arr);
+
         });
 
       })(window.d3);
 
 
-      var dataRadar = [
-        [
-        {axis:"PIPI", value:15},
-        {axis:"PEPE", value:15},
-        {axis:"POPO", value:15}
-        ],[
-        {axis:"PIPI", value:10},
-        {axis:"PEPE", value:17},
-        {axis:"POPO", value:15}
-        ],[
-        {axis:"PIPI", value:5},
-        {axis:"PEPE", value:12},
-        {axis:"POPO", value:15}
-        ]
-      ];
-
-      var margin = {top: 0, right: 0, bottom: 0, left: 0},
-        width = Math.min(100, window.innerWidth - 10) - margin.left - margin.right,
-        height = Math.min(width, window.innerHeight - margin.top - margin.bottom - 20);
-
-
-      var color = d3.scale.ordinal()
-        .range(["#EDC951","#CC333F","#00A0B0"]);
-        
-      var radarChartOptions = {
-        w: width,
-        h: height,
-        margin: margin,
-        maxValue: 0.5,
-        levels: 5,
-        roundStrokes: true,
-        color: color
-      };
-
-      RadarChart("#radarContainer", dataRadar, radarChartOptions);
-
-      function radarMapper(d){
-
-      }
+      
 
       map("#mapContainer","world-topo.json");
 
