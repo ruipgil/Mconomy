@@ -116,7 +116,7 @@ tbody tr:hover {
             <option value="hdi.meanSchool">Mean school years</option>
             <option value="hdi.gni">GNI</option>
             <option value="wage">Wage</option>
-            <option value="population">Population</option>
+            <option value="population:s">Population</option>
           </select>
         </div>
       </div>
@@ -128,12 +128,19 @@ tbody tr:hover {
     <div id="tableContainer"></div>
     <script src="/bower_components/d3/d3.js"></script>
     <script src="table.js"></script>
+    <script src="dotplot.js"></script>
     <script>
       (function(d3) {
         'use strict';
 
         d3.json('data.json', function(err, data) {
-          console.log(data);
+          var dotUpdater = dotplot(data.map(function(d) {
+            return {
+              name: d.name,
+              x: d.nMacs.percapita,
+              y: d.gdp.percapita
+            };
+          }), window.innerWidth*0.35, window.innerHeight*0.6);
             var tableUpdater = table(data.map(function(d) { return { name: d.name, value: d.nMacs.percapita }; }), window.innerWidth*0.3, window.innerHeight*4);
             document.querySelector("#table-changer").addEventListener("change", function(e) {
                 var option = e.target.value;
