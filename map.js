@@ -1,6 +1,6 @@
 function map(id,data){
-  
- d3.select(window).on("resize", throttle);
+
+ //d3.select(window).on("resize", throttle);
 
 var zoom = d3.behavior.zoom()
     .scaleExtent([1, 8])
@@ -52,11 +52,11 @@ d3.selection.prototype.moveToFront = function() {
 function draw(topo) {
 
   var country = g.selectAll(".country").data(topo);
-  
+
   var max = d3.max(Object.keys(gMapData).map(function(key) {
     return gMapData[key].nMacs.percapita;
   }));
-  
+
   var color = d3.scale.linear()
     .domain([-1, 0, 0.5, 1])
     .range(["white","#deebf7","#9ecae1","#3182bd"]);
@@ -85,8 +85,8 @@ function draw(topo) {
       })
       .on("mouseout",  function(d,i) {
         tooltip.classed("hidden", true)
-      }); 
-   
+      });
+
 }
 
 function redraw() {
@@ -100,9 +100,9 @@ function redraw() {
 function move() {
 
   var t = d3.event.translate;
-  var s = d3.event.scale;  
+  var s = d3.event.scale;
   var h = height / 3;
-  
+
   t[0] = Math.min(width / 2 * (s - 1), Math.max(width / 2 * (1 - s), t[0]));
   t[1] = Math.min(height / 2 * (s - 1) + h * s, Math.max(height / 2 * (1 - s) - h * s, t[1]));
 
@@ -118,5 +118,5 @@ function throttle() {
       redraw();
     }, 200);
 }
-  
+
 }//map

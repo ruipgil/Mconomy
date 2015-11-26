@@ -121,6 +121,7 @@ div.tooltip {
   height: 40%;
   background: #bbb;
   display: inline-block;
+  text-align: center;
 }
 
 .legendR {
@@ -174,14 +175,16 @@ div.tooltip {
         'use strict';
 
         d3.json('data.json', function(err, data) {
+          var p = document.querySelector('#plotContainer');
+          var t = document.querySelector('#tableContainer');
           var dotUpdater = dotplot(data.map(function(d) {
             return {
               name: d.name,
               x: d.nMacs.percapita,
               y: d.gdp.percapita
             };
-          }), window.innerWidth*0.35, window.innerHeight*0.6);
-            var tableUpdater = table(data.map(function(d) { return { name: d.name, value: d.nMacs.percapita }; }), window.innerWidth*0.3, window.innerHeight*4);
+          }), p.clientWidth, p.clientHeight);
+            var tableUpdater = table(data.map(function(d) { return { name: d.name, value: d.nMacs.percapita }; }), t.clientWidth, window.innerHeight*4);
             document.querySelector("#table-changer").addEventListener("change", function(e) {
                 var option = e.target.value;
                 var vals = option.split(':');
