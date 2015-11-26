@@ -163,12 +163,12 @@ div.tooltip {
     </div>
 
     <script src="./bower_components/d3/d3.js"></script>
-    <script src="./bower_components/topojson.v1.min.js"></script> //FF
+    <script src="./bower_components/topojson.v1.min.js"></script>
 
     <script src="table.js"></script>
     <script src="dotplot.js"></script>
     <script src="radar.js"></script>
-    <script src="map.js"></script> //FF
+    <script src="map.js"></script>
     <script>
       gMapData = null;
       (function(d3) {
@@ -183,7 +183,7 @@ div.tooltip {
               x: d.nMacs.percapita,
               y: d.gdp.percapita,
               r: d.hdi.value,
-              c: d.gdp.percapita
+              c: d.wage
             };
           }), p.clientWidth, p.clientHeight);
             var tableUpdater = table(data.map(function(d) { return { name: d.name, value: d.nMacs.percapita }; }), t.clientWidth, window.innerHeight*4);
