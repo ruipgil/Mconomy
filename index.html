@@ -207,7 +207,8 @@ div.tooltip {
     //DURO DURO DURO DURO DURO
     var arr = ["Portugal", "Argentina", "Brazil"];
     //Chamar o radar chart no final do codigo do rui
-    radar("#radarContainer", data, arr);
+    var radarUpdater = function(data, selection){radar("#radarContainer", data, selection)};
+    radarUpdater(data, arr);
 
         });
 

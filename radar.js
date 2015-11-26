@@ -43,7 +43,7 @@ function radar(id, data, selection) {
     console.log(dataRadar);
     
     
-    var margin = {top: 60, right: 60, bottom: 80, left: 60},
+    var margin = {top: 30, right: 50, bottom: 50, left: 50},
         width = document.getElementById('radarContainer').clientWidth - margin.right - margin.left,
         height = document.getElementById('radarContainer').clientHeight - margin.top - margin.bottom ;
 
@@ -62,7 +62,16 @@ function radar(id, data, selection) {
       };
     
     RadarChart(id, dataRadar, radarChartOptions)
-}
+
+    /*  d3.select(id).append("text")
+    .style("font-size", "22px")
+    .attr("class", "legendR")
+     .style("fill", "#EDC951")
+     .style("stroke", "none")
+     .text("CHACHACHA");
+    */
+
+   }
 
 function RadarChart(id, data, options) {
   var cfg = {
