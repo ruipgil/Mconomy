@@ -1,3 +1,25 @@
+function highlightCountry(name) {
+  // enable opacity for every parent
+  // enable opacity 1 for selected
+  d3.selectAll('[data-country]').attr("opacity", 0.5);
+  var c = d3.selectAll('[data-country="'+name+'"]');
+  c.attr("opacity", 1);
+  c.attr("stroke-width", 3)
+
+  c.forEach(function(e) {
+    try {
+      d3.select(e).moveToTop();
+    }catch(e) {
+      console.log(e);
+    }
+  });
+}
+function dehighlightCountry(name) {
+  var c = d3.selectAll('[data-country="'+name+'"]');
+  c.attr("stroke-width", 0);
+  d3.selectAll('[data-country]').attr("opacity", 1);
+}
+
 function dotplot(data, ow, oh) {
   var margin = {top: 20, right: 20, bottom: 30, left: 50};
   var width = ow - margin.left - margin.right;
@@ -44,6 +66,11 @@ function dotplot(data, ow, oh) {
   .data(data)
   .enter().append("path")
   .attr("class", "point")
+  .attr("data-country", function(d) {
+    return d.name;
+  })
+  .attr("stroke", "black")
+  .attr("stroke-width", 0)
   .attr("d", function(d) {
     var a = d3.svg.symbol().type("circle").size(d.r?r(d.r/rMax)*512:64)();
     return a;
@@ -51,5 +78,12 @@ function dotplot(data, ow, oh) {
   .attr("fill", function(d) {
     return c(d.c/cMax || 0);
   })
-  .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
+  .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; })
+  .on("mouseenter", function(d) {
+    highlightCountry(d.name);
+    console.log(d3.select(this).moveToFront);
+  })
+  .on("mouseleave", function(d) {
+    dehighlightCountry(d.name);
+  });
 };

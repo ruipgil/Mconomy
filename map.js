@@ -66,14 +66,27 @@ function draw(topo) {
       .attr("d", path)
       .attr("id", function(d,i) { return d.id; })
       .attr("title", function(d,i) { return d.properties.name; })
+      .attr("stroke", "black")
+      .attr("stroke-width", 0)
       .style("fill", function(d, i) { return color( gMapData[d.properties.name]?(gMapData[d.properties.name].nMacs.percapita / max):-1 ); });
 
   //ofsets plus width/height of transform, plsu 20 px of padding, plus 20 extra for tooltip offset off mouse
   var offsetL = document.getElementById('mapContainer').offsetLeft+(width/2)+40;
   var offsetT =document.getElementById('mapContainer').offsetTop+(height/2)+20;
 
-  //tooltips
   country
+  .attr("data-country", function(d) {
+    return d.properties.name;
+  })
+  .on("mouseenter", function(d) {
+    highlightCountry(d.properties.name);
+    d3.select(this).moveToFront();
+  })
+  .on("mouseleave", function(d) {
+    dehighlightCountry(d.properties.name);
+  });
+  //tooltips
+  /*country
     .on("mousemove", function(d,i) {
       var mouse = d3.mouse(svg.node()).map( function(d) { return parseInt(d); } );
         tooltip
@@ -85,7 +98,7 @@ function draw(topo) {
       })
       .on("mouseout",  function(d,i) {
         tooltip.classed("hidden", true)
-      });
+      });*/
 
 }
 

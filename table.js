@@ -77,7 +77,18 @@ function table(data, ow, h) {
 
   bar.append("rect")
   .attr("width", function(d) { return x(d.value); })
-  .attr("height", y.rangeBand());
+  .attr("height", y.rangeBand())
+  .attr("stroke", "black")
+  .attr("stroke-width", 0)
+  .on("mouseenter", function(d) {
+    highlightCountry(d.name);
+  })
+  .on("mouseleave", function(d) {
+    dehighlightCountry(d.name);
+  })
+  .attr("data-country", function(d) {
+    return d.name;
+  });
 
   bar.append("text")
   .attr("class", "value")
