@@ -3,19 +3,16 @@ function highlightCountry(name) {
   // enable opacity 1 for selected
   d3.selectAll('[data-country]').attr("opacity", 0.7);
   var c = d3.selectAll('[data-country="'+name+'"]');
+  c.classed("country-highlight", true);
   c.attr("opacity", 1);
-  c.attr("stroke-width", 3)
 
-  c.forEach(function(e) {
-    try {
-      d3.select(e).moveToTop();
-    }catch(e) {
-    }
+  c.each(function() {
+    this.parentNode.appendChild(this);
   });
 }
 function dehighlightCountry(name) {
   var c = d3.selectAll('[data-country="'+name+'"]');
-  c.attr("stroke-width", 0);
+  c.classed("country-highlight", false);
   d3.selectAll('[data-country]').attr("opacity", 1);
 }
 
@@ -51,13 +48,13 @@ function dotplot(data, ow, oh) {
 
   // Add the x-axis.
   svg.append("g")
-  .attr("class", "x axis")
+  .attr("class", "dot-x dot-axis")
   .attr("transform", "translate(0," + height + ")")
   .call(d3.svg.axis().scale(x).orient("bottom"));
 
   // Add the y-axis.
   svg.append("g")
-  .attr("class", "y axis")
+  .attr("class", "dot-y dot-axis")
   .call(d3.svg.axis().scale(y).orient("left"));
 
   // Add the points!
@@ -80,7 +77,6 @@ function dotplot(data, ow, oh) {
   .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; })
   .on("mouseenter", function(d) {
     highlightCountry(d.name);
-    console.log(d3.select(this).moveToFront);
   })
   .on("mouseleave", function(d) {
     dehighlightCountry(d.name);

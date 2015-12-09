@@ -43,12 +43,6 @@ d3.json(data, function(error, world) {
 
 });
 
-d3.selection.prototype.moveToFront = function() {
-  return this.each(function(){
-    this.parentNode.appendChild(this);
-  });
-};
-
 function draw(topo) {
 
   var country = g.selectAll(".country").data(topo);
@@ -66,7 +60,6 @@ function draw(topo) {
       .attr("d", path)
       .attr("id", function(d,i) { return d.id; })
       .attr("title", function(d,i) { return d.properties.name; })
-      .attr("stroke", "black")
       .attr("stroke-width", 0)
       .style("fill", function(d, i) { return color( gMapData[d.properties.name]?(gMapData[d.properties.name].nMacs.percapita / max):-1 ); });
 
@@ -80,7 +73,6 @@ function draw(topo) {
   })
   .on("mouseenter", function(d) {
     highlightCountry(d.properties.name);
-    d3.select(this).moveToFront();
   })
   .on("mouseleave", function(d) {
     dehighlightCountry(d.properties.name);

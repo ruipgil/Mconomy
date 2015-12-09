@@ -17,7 +17,7 @@ html, body {
 	fill: steelblue;
 }
 
-.axis path, .axis line {
+.axis path, .axis line, .dot-axis path, .dot-axis line {
 	fill: none;
 	stroke: black;
 	shape-rendering: crispEdges;
@@ -71,8 +71,13 @@ tbody tr:hover {
 }
 
 .country{
-  stroke: #ddd;
+  stroke: #eee;
+  stroke-width: .7px;
 /*  stroke-width: .7px;*/
+}
+.country-highlight {
+  stroke: #000;
+  stroke-width: 1;
 }
 
 .hidden {
@@ -129,7 +134,12 @@ div.tooltip {
 .tooltipR {
   fill: #333333;
 }
-
+.order-country, .order-value {
+  cursor: s-resize;
+}
+.selectable-country {
+  cursor: pointer;
+}
   </style>
   <body>
     <div id="containers">
@@ -138,18 +148,18 @@ div.tooltip {
       <div id="tableContainer">
         <div>
           <select id="table-changer">
-            <option value="nMacs.percapita">McsPercapita</option>
-            <option value="nMacs.value">Number of mcdonalds</option>
-            <option value="bigmacIndex.burgersPerWage">Burgers per wage</option>
-            <option value="bigmacIndex.toUs:,.2%">Burger price compared to United States</option>
-            <option value="gdp.percapita">GDP per capita</option>
-            <option value="hdi.hdi">Human Development Index</option>
-            <option value="hdi.expectedSchool">Expected School years</option>
-            <option value="hdi.lifeAtBirth">Life expectancy at birth</option>
-            <option value="hdi.meanSchool">Mean school years</option>
-            <option value="hdi.gni">GNI</option>
-            <option value="wage">Wage</option>
-            <option value="population:s">Population</option>
+            <option value="nMacs.percapita:,.0f:5">McsPercapita</option>
+            <option value="nMacs.value:,.0f:5">Number of mcdonalds</option>
+            <option value="bigmacIndex.burgersPerWage:,.0f:5">Burgers per wage</option>
+            <option value="bigmacIndex.toUs:,.1%:5">Burger price compared to United States</option>
+            <option value="gdp.percapita:$,.2s:5">GDP per capita</option>
+            <option value="hdi.hdi:,.0f:5">Human Development Index</option>
+            <option value="hdi.expectedSchool:,.0f:5">Expected School years</option>
+            <option value="hdi.lifeAtBirth:,.0f:5">Life expectancy at birth</option>
+            <option value="hdi.meanSchool:,.0f:5">Mean school years</option>
+            <option value="hdi.gni:,.0f:5">GNI</option>
+            <option value="wage:$,.2s:5">Wage</option>
+            <option value="population:,.1s:3">Population</option>
           </select>
         </div>
       </div>
@@ -205,18 +215,15 @@ div.tooltip {
                         };
                         });
                       }
-                tableUpdater(mapper, vals[1]?vals[1]:",.0f");
+                tableUpdater(mapper, vals[1]?vals[1]:",.0f", vals[2]?vals[2]:undefined);
             });
 	  var countryMap = data.reduce(function(prev, curr) {
 	    prev[curr.name] = curr;
 	    return prev;
 	  }, {});
 	  gMapData = countryMap;
-	  console.log(countryMap);
 
-    //DURO DURO DURO DURO DURO
     var arr = ["Portugal"];
-    //Chamar o radar chart no final do codigo do rui
     var radarUpdater = function(data, selection){radar("#radarContainer", data, selection)};
     radarUpdater(data, arr);
     triggerCountrySelection = function(cs) {

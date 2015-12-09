@@ -1,6 +1,5 @@
 /*
  * TODO
- *  + select and restrict
  *  + fix format representation
  *  + keep x axis fixed on top
  */
@@ -83,6 +82,19 @@ function table(data, ow, h) {
   var xAxis = d3.svg.axis().scale(x).orient("top").tickSize(-h).tickFormat(format);
   var yAxis = d3.svg.axis().scale(y).orient("left").tickSize(0);
 
+  function select(name) {
+
+    if (selection[name]) {
+      delete selection[name];
+    } else {
+      selection[name] = 1000;
+    }
+    s = sortTable[oppositeSorting[sorting]](data);
+    data = s.data;
+    sorting = s.sorting;
+    updateSort();
+    triggerCountrySelection(Object.keys(selection));
+  }
 
   var svg = d3.select("#tableContainer").append("svg")
   .attr("width", w + m[1] + m[3])
@@ -94,10 +106,43 @@ function table(data, ow, h) {
   x.domain([0, d3.max(data, function(d) { return d.value; })]);
   y.domain(data.map(function(d) { return d.name; }));
 
+  svg.append("g")
+  .attr("class", "x axis")
+  .call(xAxis);
+
+  svg.append("g")
+  .attr("class", "y axis yyy selectable-country")
+  .attr("transform", "translate(" + (-48) + ",0)")
+  .call(yAxis)
+  .selectAll("text")
+  .on("mouseenter", function(d) {
+    highlightCountry(d);
+  })
+  .on("mouseleave", function(d) {
+    dehighlightCountry(d);
+  })
+  .on("click", function(d) {
+    select(d);
+  });
+
+  svg.append("g")
+  .attr("class", "y axis order-country")
+  .append("text")
+  .attr("transform", "translate(" + (-53) + ",-3)")
+  .attr("text-anchor", "end")
+  .text("Country");
+
+  svg.append("g")
+  .attr("class", "y axis order-value")
+  .append("text")
+  .attr("transform", "translate(" + (-10) + ",-3)")
+  .attr("text-anchor", "end")
+  .text("Value");
+
   var bar = svg.selectAll("g.bar")
   .data(data)
   .enter().append("g")
-  .attr("class", "bar")
+  .attr("class", "bar selectable-country")
   .attr("transform", function(d) { return "translate(0," + y(d.name) + ")"; });
 
   bar.append("rect")
@@ -115,51 +160,29 @@ function table(data, ow, h) {
     return d.name;
   })
   .on("click", function(d) {
-    if (selection[d.name]) {
-      delete selection[d.name];
-    } else {
-      selection[d.name] = 1000;
-    }
-    s = sortTable[oppositeSorting[sorting]](data);
-    data = s.data;
-    sorting = s.sorting;
-    updateSort();
-    triggerCountrySelection(Object.keys(selection));
+    select(d.name);
   });
 
 
   bar.append("text")
-  .attr("class", "value")
+  .attr("class", "value selectable-country")
   //.attr("x", function(d) { return x(d.value); })
   .attr("transform", "translate(" + (-5) + ",0)")
   .attr("y", y.rangeBand() / 2)
   //.attr("dx", -3)
   .attr("dy", ".35em")
   .attr("text-anchor", "end")
-  .text(function(d) { return format(d.value); });
+  .text(function(d) { return format(d.value); })
+  .on("mouseenter", function(d) {
+    highlightCountry(d.name);
+  })
+  .on("click", function(d) {
+    select(d.name);
+  })
+  .on("mouseleave", function(d) {
+    dehighlightCountry(d.name);
+  });
 
-  svg.append("g")
-  .attr("class", "x axis")
-  .call(xAxis);
-
-  svg.append("g")
-  .attr("class", "y axis yyy")
-  .attr("transform", "translate(" + (-48) + ",0)")
-  .call(yAxis);
-
-  svg.append("g")
-  .attr("class", "y axis order-country")
-  .append("text")
-  .attr("transform", "translate(" + (-45) + ",0)")
-  .attr("text-anchor", "end")
-  .text("Country");
-
-  svg.append("g")
-  .attr("class", "y axis order-value")
-  .append("text")
-  .attr("transform", "translate(" + (-5) + ",0)")
-  .attr("text-anchor", "end")
-  .text("Value");
 
   function updateSort() {
 
@@ -201,7 +224,7 @@ function table(data, ow, h) {
     updateSort();
   });
 
-  return function(newData, newFormat) {
+  return function(newData, newFormat, nTicks) {
     dMap = data.reduce(function(prev, curr, i) {
       prev[curr.name] = i;
       return prev;
@@ -216,7 +239,7 @@ function table(data, ow, h) {
     x.domain([0, d3.max(data, function(d) { return d.value; })]);
     y.domain(data.map(function(d) { return d.name; }));
 
-    xAxis = d3.svg.axis().scale(x).orient("top").tickSize(-h).tickFormat(format);
+    xAxis = d3.svg.axis().scale(x).orient("top").tickSize(-h).tickFormat(format).ticks(nTicks);
     yAxis = d3.svg.axis().scale(y).orient("left").tickSize(0);
     d3.selectAll(".x")
     .transition()
