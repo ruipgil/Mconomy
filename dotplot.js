@@ -10,7 +10,6 @@ function highlightCountry(name) {
     try {
       d3.select(e).moveToTop();
     }catch(e) {
-      console.log(e);
     }
   });
 }

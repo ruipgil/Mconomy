@@ -168,6 +168,7 @@ div.tooltip {
     <script src="map.js"></script>
     <script>
       gMapData = null;
+      triggerCountrySelection = null;
       (function(d3) {
         'use strict';
 
@@ -214,10 +215,13 @@ div.tooltip {
 	  console.log(countryMap);
 
     //DURO DURO DURO DURO DURO
-    var arr = ["Portugal", "Argentina", "Brazil"];
+    var arr = ["Portugal"];
     //Chamar o radar chart no final do codigo do rui
     var radarUpdater = function(data, selection){radar("#radarContainer", data, selection)};
     radarUpdater(data, arr);
+    triggerCountrySelection = function(cs) {
+      radarUpdater(data, cs);
+    };
 
         });
 

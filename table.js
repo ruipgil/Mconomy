@@ -124,6 +124,7 @@ function table(data, ow, h) {
     data = s.data;
     sorting = s.sorting;
     updateSort();
+    triggerCountrySelection(Object.keys(selection));
   });
 
 
