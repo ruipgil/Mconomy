@@ -8,7 +8,15 @@ var sortTable = {
   "ABC": function(data) {
     return {
       data: data.sort(function(a, b) {
-        return a.name.localeCompare(b.name);
+        if (selection[a.name] && selection[b.name]) {
+          return a.name.localeCompare(b.name);
+        } else if (selection[a.name]) {
+          return ('aaa'+a.name).localeCompare(b.name);
+        } else if (selection[b.name]) {
+          return a.name.localeCompare('aaa'+b.name);
+        } else {
+          return a.name.localeCompare(b.name);
+        }
       }),
       sorting: "CBA"
     };
@@ -16,7 +24,15 @@ var sortTable = {
   "CBA": function(data) {
     return {
       data: data.sort(function(a, b) {
-        return b.name.localeCompare(a.name);
+        if (selection[a.name] && selection[b.name]) {
+          return b.name.localeCompare(a.name);
+        } else if (selection[a.name]) {
+          return ('aaa'+b.name).localeCompare(a.name);
+        } else if (selection[b.name]) {
+          return b.name.localeCompare('aaa'+a.name);
+        } else {
+          return b.name.localeCompare(a.name);
+        }
       }),
       sorting: "ABC"
     };
@@ -24,7 +40,7 @@ var sortTable = {
   "123": function(data) {
     return {
       data: data.sort(function(b, a) {
-        return a.value - b.value;
+        return (selection[a.name]||1)*a.value - (selection[b.name]||1)*b.value;
       }),
       sorting: "321"
     };
@@ -32,12 +48,21 @@ var sortTable = {
   "321": function(data) {
     return {
       data: data.sort(function(b, a) {
-        return b.value - a.value;
+        return (selection[a.name]||1)*b.value - (selection[b.name]||1)*a.value;
       }),
       sorting: "123"
     };
   }
 };
+
+var oppositeSorting = {
+  "ABC": "CBA",
+  "CBA": "ABC",
+  "123": "321",
+  "321": "123"
+};
+
+var selection = {};
 
 function table(data, ow, h) {
   var originalData = data;
@@ -88,7 +113,19 @@ function table(data, ow, h) {
   })
   .attr("data-country", function(d) {
     return d.name;
+  })
+  .on("click", function(d) {
+    if (selection[d.name]) {
+      delete selection[d.name];
+    } else {
+      selection[d.name] = 1000;
+    }
+    s = sortTable[oppositeSorting[sorting]](data);
+    data = s.data;
+    sorting = s.sorting;
+    updateSort();
   });
+
 
   bar.append("text")
   .attr("class", "value")

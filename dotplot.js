@@ -1,7 +1,7 @@
 function highlightCountry(name) {
   // enable opacity for every parent
   // enable opacity 1 for selected
-  d3.selectAll('[data-country]').attr("opacity", 0.5);
+  d3.selectAll('[data-country]').attr("opacity", 0.7);
   var c = d3.selectAll('[data-country="'+name+'"]');
   c.attr("opacity", 1);
   c.attr("stroke-width", 3)
