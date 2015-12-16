@@ -1,6 +1,66 @@
+var index, indexProp;
+
+function updateMapIndex(selected){
+	switch(selected)
+	{
+	case "McsPercapita":
+		index = "nMacs";
+		indexProp = "percapita";
+		break;
+	case "Number of mcdonalds":
+		index = "nMacs";
+		indexProp = "value";
+		break;
+	case "Burgers per wage":
+		index = "bigmacIndex";
+		indexProp = "burgersPerWage";
+		break;
+	case "Burger price compared to United States":
+		index = "bigmacIndex";
+		indexProp = "toUs";
+		break;
+	case "GDP per capita":
+		index = "gdp";
+		indexProp = "percapita";
+		break;
+	case "Human Development Index":
+		index = "hdi";
+		indexProp = "hdi";
+		break;
+	case "Expected School years":
+		index = "hdi";
+		indexProp = "expectedSchool";
+		break;
+	case "Life expectancy at birth":
+		index = "hdi";
+		indexProp = "lifeAtBirth";
+		break;
+	case "Mean school years":
+		index = "hdi";
+		indexProp = "meanSchool";
+		break;
+	case "GNI":
+		index = "hdi";
+		indexProp = "gni";
+		break;
+	case "Wage":
+		index = 'wage';
+		indexProp = null;
+		break;
+	case "Population":
+		index = 'population';
+		indexProp = null;
+		break;
+	default:
+		index = "nMacs";
+		indexProp = "percapita";
+	}
+}
+
 function map(id,data){
 
  //d3.select(window).on("resize", throttle);
+
 
 var zoom = d3.behavior.zoom()
     .scaleExtent([1, 8])
@@ -44,13 +104,13 @@ d3.json(data, function(error, world) {
 });
 
 function draw(topo) {
-
+	
   var country = g.selectAll(".country").data(topo);
 
   var max = d3.max(Object.keys(gMapData).map(function(key) {
-    return gMapData[key].nMacs.percapita;
-  }));
-
+    return  indexProp? gMapData[key][index][indexProp]: gMapData[key][index];
+  }));0
+  
   var color = d3.scale.linear()
     .domain([-1, 0, 0.5, 1])
     .range(["white","#deebf7","#9ecae1","#3182bd"]);
@@ -61,11 +121,12 @@ function draw(topo) {
       .attr("id", function(d,i) { return d.id; })
       .attr("title", function(d,i) { return d.properties.name; })
       .attr("stroke-width", 0)
-      .style("fill", function(d, i) { return color( gMapData[d.properties.name]?(gMapData[d.properties.name].nMacs.percapita / max):-1 ); });
+      .style("fill", function(d, i) { return color( gMapData[d.properties.name]?((indexProp? gMapData[d.properties.name][index][indexProp] : gMapData[d.properties.name][index] ) / max):-1 ); });
 
+	  
   //ofsets plus width/height of transform, plsu 20 px of padding, plus 20 extra for tooltip offset off mouse
   var offsetL = document.getElementById('mapContainer').offsetLeft+(width/2)+40;
-  var offsetT =document.getElementById('mapContainer').offsetTop+(height/2)+20;
+  var offsetT = document.getElementById('mapContainer').offsetTop+(height/2)+20;
 
   country
   .attr("data-country", function(d) {
@@ -95,8 +156,6 @@ function draw(topo) {
 }
 
 function redraw() {
-  width = document.getElementById('mapContainer').offsetWidth-60;
-  height = width / 2;
   d3.select('svg').remove();
   setup(width,height);
   draw(topo);
@@ -124,4 +183,5 @@ function throttle() {
     }, 200);
 }
 
+map.redraw = redraw;
 }//map

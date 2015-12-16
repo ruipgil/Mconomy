@@ -179,12 +179,15 @@ div.tooltip {
     <script>
       gMapData = null;
       triggerCountrySelection = null;
+	  var tablechanger = document.getElementById("table-changer");
+	  
       (function(d3) {
         'use strict';
 
         d3.json('data.json', function(err, data) {
           var p = document.querySelector('#plotContainer');
           var t = document.querySelector('#tableContainer');
+		 
           var dotUpdater = dotplot(data.map(function(d) {
             return {
               name: d.name,
@@ -216,6 +219,11 @@ div.tooltip {
                         });
                       }
                 tableUpdater(mapper, vals[1]?vals[1]:",.0f", vals[2]?vals[2]:undefined);
+				
+				updateMapIndex(tablechanger.options[tablechanger.selectedIndex].text);
+				map.redraw();
+				
+				
             });
 	  var countryMap = data.reduce(function(prev, curr) {
 	    prev[curr.name] = curr;
@@ -226,18 +234,17 @@ div.tooltip {
     var arr = ["Portugal"];
     var radarUpdater = function(data, selection){radar("#radarContainer", data, selection)};
     radarUpdater(data, arr);
-    triggerCountrySelection = function(cs) {
+    
+	triggerCountrySelection = function(cs) {
       radarUpdater(data, cs);
     };
 
         });
 
       })(window.d3);
-
-
-
-
-      map("#mapContainer","world-topo.json");
+	  
+	updateMapIndex(tablechanger.options[tablechanger.selectedIndex].text);
+    map("#mapContainer","world-topo.json");
 
     </script>
   </body>
