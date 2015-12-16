@@ -115,6 +115,21 @@ function draw(topo) {
     .domain([-1, 0, 0.5, 1])
     .range(["white","#deebf7","#9ecae1","#3182bd"]);
 
+	var svg = d3.select("svg");
+	
+	svg.append("g")
+	  .attr("class", "legendLinear")
+	  .attr("transform", "translate(20,340)");
+
+	var legendLinear = d3.legend.color()
+	  .shapeWidth(30)
+	  .orient('horizontal')
+	  .title("Legend")
+	  .scale(color);
+
+	svg.select(".legendLinear")
+	  .call(legendLinear);
+
   country.enter().insert("path")
       .attr("class", "country")
       .attr("d", path)

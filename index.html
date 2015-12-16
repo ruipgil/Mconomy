@@ -198,6 +198,7 @@ div.tooltip {
 
     <script src="./bower_components/d3/d3.js"></script>
     <script src="./bower_components/topojson.v1.min.js"></script>
+	<script src="./bower_components/d3/d3-legend.js"></script>
 
     <script src="table.js"></script>
     <script src="dotplot.js"></script>
@@ -277,7 +278,8 @@ div.tooltip {
 
       })(window.d3);
 
-	updateMapIndex(tablechanger.options[tablechanger.selectedIndex].text);
+	var selectedIndex = tablechanger.options[tablechanger.selectedIndex].text;
+	updateMapIndex(selectedIndex);
     map("#mapContainer","world-topo.json");
 
     </script>
