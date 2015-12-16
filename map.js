@@ -157,6 +157,8 @@ function draw(topo) {
 
 function redraw() {
   d3.select('svg').remove();
+  var width = document.getElementById('mapContainer').offsetWidth;
+  var height = document.getElementById('mapContainer').offsetHeight;
   setup(width,height);
   draw(topo);
 }
