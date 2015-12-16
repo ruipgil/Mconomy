@@ -140,6 +140,14 @@ div.tooltip {
 .selectable-country {
   cursor: pointer;
 }
+#axis-sel-overlay {
+  display: none;
+  position: absolute;
+  padding-left: 1em;
+  padding-right: 1em;
+  background-color: rgba(238,238,238, 0.8);
+}
+
   </style>
   <body>
     <div id="containers">
@@ -164,6 +172,25 @@ div.tooltip {
         </div>
       </div>
       <div id="plotContainer">
+        <div id="axis-sel-overlay">
+          <div>Select an attribute to the <span class="axis-sp">x axis</span></div>
+
+          <select id="overlay-changer">
+            <option value="" id="none-option">None</option>
+            <option value="nMacs.percapita:,.0f:5">McsPercapita</option>
+            <option value="nMacs.value:,.0f:5">Number of mcdonalds</option>
+            <option value="bigmacIndex.burgersPerWage:,.0f:5">Burgers per wage</option>
+            <option value="bigmacIndex.toUs:,.1%:5">Burger price compared to United States</option>
+            <option value="gdp.percapita:$,.2s:5">GDP per capita</option>
+            <option value="hdi.hdi:,.0f:5">Human Development Index</option>
+            <option value="hdi.expectedSchool:,.0f:5">Expected School years</option>
+            <option value="hdi.lifeAtBirth:,.0f:5">Life expectancy at birth</option>
+            <option value="hdi.meanSchool:,.0f:5">Mean school years</option>
+            <option value="hdi.gni:,.0f:5">GNI</option>
+            <option value="wage:$,.2s:5">Wage</option>
+            <option value="population:,.1s:3">Population</option>
+          </select>
+        </div>
       </div>
       <div id="radarContainer">
       </div>
@@ -180,23 +207,30 @@ div.tooltip {
       gMapData = null;
       triggerCountrySelection = null;
 	  var tablechanger = document.getElementById("table-changer");
-	  
+
       (function(d3) {
         'use strict';
 
         d3.json('data.json', function(err, data) {
           var p = document.querySelector('#plotContainer');
           var t = document.querySelector('#tableContainer');
-		 
-          var dotUpdater = dotplot(data.map(function(d) {
-            return {
-              name: d.name,
-              x: d.nMacs.percapita,
-              y: d.gdp.percapita,
-              r: d.hdi.value,
-              c: d.wage
-            };
-          }), p.clientWidth, p.clientHeight);
+
+          var dotUpdater = dotplot(data, {
+            x: {
+              value: "nMacs.percapita",
+              label: "Number of McDonalds (per capita)"
+            },
+            y: {
+              value: "gdp.percapita",
+              label: "GDP (per capita)"
+            },
+            r: {
+              value: null
+            },
+            c: {
+              value: "wage"
+            }
+          }, p.clientWidth, p.clientHeight);
             var tableUpdater = table(data.map(function(d) { return { name: d.name, value: d.nMacs.percapita }; }), t.clientWidth, window.innerHeight*4);
             document.querySelector("#table-changer").addEventListener("change", function(e) {
                 var option = e.target.value;
@@ -219,11 +253,11 @@ div.tooltip {
                         });
                       }
                 tableUpdater(mapper, vals[1]?vals[1]:",.0f", vals[2]?vals[2]:undefined);
-				
 				updateMapIndex(tablechanger.options[tablechanger.selectedIndex].text);
+        dotUpdater("x", vals[0], vals[0]);
 				map.redraw();
-				
-				
+
+
             });
 	  var countryMap = data.reduce(function(prev, curr) {
 	    prev[curr.name] = curr;
@@ -234,7 +268,7 @@ div.tooltip {
     var arr = ["Portugal"];
     var radarUpdater = function(data, selection){radar("#radarContainer", data, selection)};
     radarUpdater(data, arr);
-    
+
 	triggerCountrySelection = function(cs) {
       radarUpdater(data, cs);
     };
@@ -242,7 +276,7 @@ div.tooltip {
         });
 
       })(window.d3);
-	  
+
 	updateMapIndex(tablechanger.options[tablechanger.selectedIndex].text);
     map("#mapContainer","world-topo.json");
 
