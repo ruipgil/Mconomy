@@ -254,7 +254,7 @@ div.tooltip {
                         });
                       }
                 tableUpdater(mapper, vals[1]?vals[1]:",.0f", vals[2]?vals[2]:undefined);
-				updateMapIndex(tablechanger.options[tablechanger.selectedIndex].text);
+				updateMap(tablechanger.options[tablechanger.selectedIndex].text);
         dotUpdater("x", vals[0], vals[0]);
 				map.redraw();
 
@@ -279,7 +279,7 @@ div.tooltip {
       })(window.d3);
 
 	var selectedIndex = tablechanger.options[tablechanger.selectedIndex].text;
-	updateMapIndex(selectedIndex);
+	updateMap(selectedIndex);
     map("#mapContainer","world-topo.json");
 
     </script>
