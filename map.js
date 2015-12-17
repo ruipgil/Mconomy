@@ -1,6 +1,7 @@
-var index, indexProp;
+var index, indexProp, legend;
 
-function updateMapIndex(selected){
+function updateMap(selected){
+	legend = selected;
 	switch(selected)
 	{
 	case "McsPercapita":
@@ -114,6 +115,24 @@ function draw(topo) {
   var color = d3.scale.linear()
     .domain([-1, 0, 0.5, 1])
     .range(["white","#deebf7","#9ecae1","#3182bd"]);
+
+	var svg = d3.select("svg");
+	
+	var translate = "translate(" + (width*0.025) + "," + (height * 0.85) + ")";
+	
+	svg.append("g")
+	  .attr("class", "legendLinear")
+	  .attr("transform", translate);
+
+	var legendLinear = d3.legend.color()
+	  .shapeWidth(30)
+	  .orient('horizontal')
+	  .title(legend)
+	  .labels(["No Data"]) // to write the rest add in array
+	  .scale(color);
+
+	svg.select(".legendLinear")
+	  .call(legendLinear);
 
   country.enter().insert("path")
       .attr("class", "country")

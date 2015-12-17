@@ -236,6 +236,7 @@ div.tooltip {
 
     <script src="./bower_components/d3/d3.js"></script>
     <script src="./bower_components/topojson.v1.min.js"></script>
+	<script src="./bower_components/d3/d3-legend.js"></script>
 
     <script src="table.js"></script>
     <script src="dotplot.js"></script>
@@ -292,8 +293,8 @@ div.tooltip {
                         });
                       }
                 tableUpdater(mapper, vals[1]?vals[1]:",.0f", vals[2]?vals[2]:undefined);
-				//updateMapIndex(tablechanger.options[tablechanger.selectedIndex].text);
-        dotUpdater("c", vals[0], vals[0]);
+				updateMap(tablechanger.options[tablechanger.selectedIndex].text);
+        dotUpdater("x", vals[0], vals[0]);
 				map.redraw();
             });
 	  var countryMap = data.reduce(function(prev, curr) {
@@ -314,7 +315,7 @@ div.tooltip {
 
       })(window.d3);
 
-	updateMapIndex("McsPercapita");
+	updateMap("McsPercapita");
     map("#mapContainer","world-topo.json");
 
     </script>

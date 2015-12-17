@@ -1,4 +1,5 @@
 function radar(id, data, selection) {
+
   //Mapa com os nomes dos paises e todos os dados
     var countryDataMap = data.reduce(function(prev, curr) {
       prev[curr.name] = curr;
@@ -28,7 +29,9 @@ function radar(id, data, selection) {
         maxValues[5] = countryDataMap[selection[i]].death.macsPer;
       }
 
-    }
+   }
+
+  
 
     var dataRadar = new Array(selection.length);
     for(var i = 0; i < selection.length; i++){
@@ -43,7 +46,7 @@ function radar(id, data, selection) {
     //console.log(dataRadar);
 
 
-    var margin = {top: 30, right: 50, bottom: 50, left: 50},
+    var margin = {top: 30, right: 70, bottom: 50, left: 50},
         width = document.getElementById('radarContainer').clientWidth - margin.right - margin.left,
         height = document.getElementById('radarContainer').clientHeight - margin.top - margin.bottom ;
 
@@ -61,7 +64,7 @@ function radar(id, data, selection) {
         color: color
       };
 
-    RadarChart(id, dataRadar, radarChartOptions)
+    RadarChart(id, dataRadar, radarChartOptions, selection)
 
     /*  d3.select(id).append("text")
     .style("font-size", "22px")
@@ -73,7 +76,7 @@ function radar(id, data, selection) {
 
    }
 
-function RadarChart(id, data, options) {
+function RadarChart(id, data, options, selection) {
   var cfg = {
    w: 600,        //Width of the circle
    h: 600,        //Height of the circle
@@ -336,5 +339,35 @@ function RadarChart(id, data, options) {
     }
     });
   }//wrap
+
+
+  //Legenda
+  var ordinal = d3.scale.ordinal()
+  .domain([selection[0], selection[1], selection[2]])
+  .range([ "rgb(237, 201, 81)", "rgb(204, 51, 63)", "rgb(0,160,176)"]);
+
+  var svg = d3.select(id).select("svg");
+
+  //var heightLeg = document.getElementById('mapContainer').clientHeight;
+ // var widthLeg = document.getElementById('plotContainer').clientWidth;
+  //console.log(heightLeg + " " + widthLeg);
+
+  svg.append("g")
+    .attr("class", "legendOrdinal")
+    //.attr("transform", "translate(" + heightLeg + "," + widthLeg + ")");
+    .attr("transform", "translate(10, 10)");
+
+  var legendOrdinal = d3.legend.color()
+    //d3 symbol creates a path-string, for example
+    //"M0,-8.059274488676564L9.306048591020996,
+    //8.059274488676564 -9.306048591020996,8.059274488676564Z"
+    .shape("path", d3.svg.symbol().type("square").size(150)())
+    .shapePadding(10)
+    .scale(ordinal);
+
+  svg.select(".legendOrdinal")
+    .call(legendOrdinal);
+
+// -- FIM Legenda --
 
 }//RadarChart
