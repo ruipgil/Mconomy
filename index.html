@@ -303,7 +303,7 @@ div.tooltip {
                         });
                       }
                 tableUpdater(mapper, vals[1]?vals[1]:",.0f", vals[2]?vals[2]:undefined);
-				//updateMap(tablechanger.options[tablechanger.selectedIndex].text);
+				updateMap(vals[0]);
         dotUpdater("c", vals[0], vals[0]);
 				map.redraw();
             });
@@ -325,7 +325,7 @@ div.tooltip {
 
       })(window.d3);
 
-	updateMap("McsPercapita");
+	updateMap("nMacs.percapita");
     map("#mapContainer","world-topo.json");
 
     </script>

@@ -1,60 +1,7 @@
-var index, indexProp;
+var mapAttribute;
 
 function updateMap(selected){
-	switch(selected)
-	{
-	case "McsPercapita":
-		index = "nMacs";
-		indexProp = "percapita";
-		break;
-	case "Number of mcdonalds":
-		index = "nMacs";
-		indexProp = "value";
-		break;
-	case "Burgers per wage":
-		index = "bigmacIndex";
-		indexProp = "burgersPerWage";
-		break;
-	case "Burger price compared to United States":
-		index = "bigmacIndex";
-		indexProp = "toUs";
-		break;
-	case "GDP per capita":
-		index = "gdp";
-		indexProp = "percapita";
-		break;
-	case "Human Development Index":
-		index = "hdi";
-		indexProp = "hdi";
-		break;
-	case "Expected School years":
-		index = "hdi";
-		indexProp = "expectedSchool";
-		break;
-	case "Life expectancy at birth":
-		index = "hdi";
-		indexProp = "lifeAtBirth";
-		break;
-	case "Mean school years":
-		index = "hdi";
-		indexProp = "meanSchool";
-		break;
-	case "GNI":
-		index = "hdi";
-		indexProp = "gni";
-		break;
-	case "Wage":
-		index = 'wage';
-		indexProp = null;
-		break;
-	case "Population":
-		index = 'population';
-		indexProp = null;
-		break;
-	default:
-		index = "nMacs";
-		indexProp = "percapita";
-	}
+  mapAttribute = selected;
 }
 
 function map(id,data){
@@ -110,7 +57,7 @@ function draw(topo) {
   var country = g.selectAll(".country").data(topo);
 
   var max = d3.max(Object.keys(gMapData).map(function(key) {
-    return  indexProp? gMapData[key][index][indexProp]: gMapData[key][index];
+    return  selectFromAttribute(gMapData[key], mapAttribute);
   }));0
   
   var color = d3.scale.linear()
@@ -125,7 +72,7 @@ function draw(topo) {
       .attr("id", function(d,i) { return d.id; })
       .attr("title", function(d,i) { return d.properties.name; })
       .attr("stroke-width", 0)
-      .style("fill", function(d, i) { return color( gMapData[d.properties.name]?((indexProp? gMapData[d.properties.name][index][indexProp] : gMapData[d.properties.name][index] ) / max):-1 ); });
+      .style("fill", function(d, i) { return color( gMapData[d.properties.name]?(selectFromAttribute(gMapData[d.properties.name], mapAttribute) / max):-1 ); });
 
 	  
   //ofsets plus width/height of transform, plsu 20 px of padding, plus 20 extra for tooltip offset off mouse
