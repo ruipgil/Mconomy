@@ -157,7 +157,7 @@ function dotplot(alldata, attributes, ow, oh) {
   .attr("class", "dot-y-label")
   .attr("transform", "rotate(-90), translate(-"+(height/2-margin.top/2)+", -50)")
   .attr("text-anchor", "middle")
-  .text(attributes.y.label)
+  .text(attributes.y.label+" ▼")
   .on("click", function() {
     axisPopup("y", "y axis");
   });
@@ -167,7 +167,7 @@ function dotplot(alldata, attributes, ow, oh) {
   .attr("class", "dot-x-label")
   .attr("transform", "translate("+(width/2+margin.left/2-10)+", "+(height+margin.bottom-10)+")")
   .attr("text-anchor", "middle")
-  .text(attributes.x.label)
+  .text(attributes.x.label+" ▼")
   .on("click", function() {
     axisPopup("x", "x axis");
   });
@@ -203,7 +203,7 @@ function dotplot(alldata, attributes, ow, oh) {
   .attr("class", "dot-r-label")
   .attr("transform", "translate("+(C_R_SEL_X-12)+", -7)")
   .attr("text-anchor", "end")
-  .text(attributes.r.label || "None")
+  .text("▼ "+(attributes.r.label || "None"))
   .on("click", function() {
     axisPopup("r", "radius", true);
   });
@@ -255,13 +255,13 @@ function dotplot(alldata, attributes, ow, oh) {
     .call(yAxis);
 
     d3.select(".dot-y-label")
-    .text(attributes.y.label);
+    .text(attributes.y.label+" ▼");
 
     d3.select(".dot-x-label")
-    .text(attributes.x.label);
+    .text(attributes.x.label+" ▼");
 
     d3.select(".dot-r-label")
-    .text(attributes.r.label || "None");
+    .text("▼ "+(attributes.r.label || "None"));
 
     rMax = d3.max(data.map(function(d) { return d.r; }));
     cMax = d3.max(data.map(function(d) { return d.c; }));
