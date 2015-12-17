@@ -1,7 +1,6 @@
-var index, indexProp, legend;
+var index, indexProp;
 
 function updateMap(selected){
-	legend = selected;
 	switch(selected)
 	{
 	case "McsPercapita":
@@ -92,6 +91,8 @@ function setup(width,height){
       .call(zoom);
 
   g = svg.append("g");
+  
+  legend();
 
 }
 
@@ -116,24 +117,8 @@ function draw(topo) {
     .domain([-1, 0, 0.5, 1])
     .range(["white","#deebf7","#9ecae1","#3182bd"]);
 
-	var svg = d3.select("svg");
-	
-	var translate = "translate(" + (width*0.025) + "," + (height * 0.85) + ")";
-	
-	svg.append("g")
-	  .attr("class", "legendLinear")
-	  .attr("transform", translate);
-
-	var legendLinear = d3.legend.color()
-	  .shapeWidth(30)
-	  .orient('horizontal')
-	  .title(legend)
-	  .labels(["No Data"]) // to write the rest add in array
-	  .scale(color);
-
-	svg.select(".legendLinear")
-	  .call(legendLinear);
-
+  
+  
   country.enter().insert("path")
       .attr("class", "country")
       .attr("d", path)
@@ -172,6 +157,100 @@ function draw(topo) {
         tooltip.classed("hidden", true)
       });*/
 
+}
+function legend(){
+	
+	var data = [{
+      color: "#deebf7",
+      label: '0.25'
+    }, {
+      color: "#9ecae1",
+      label: '0.5'
+    }, {
+      color: "#3182bd",
+      label: '0.75'
+    }]
+	
+    var legendWidth = width/4,
+      legendHeight = height/12;
+	  
+	var positionWidth = -width/2.1,
+		positionHeight = height/3; 
+
+    var grad = svg.append('defs')
+      .append('linearGradient')
+      .attr('id', 'grad')
+      .attr('x1', '0%')
+      .attr('x2', '100%')
+      .attr('y1', '0%')
+      .attr('y2', '0%');
+
+    grad.selectAll('stop')
+      .data(data)
+      .enter()
+      .append('stop')
+      .attr('offset', function(d, i) {
+        return (i / data.length) * 100 + '%';
+      })
+      .style('stop-color', function(d) {
+        return d.color;
+      })
+      .style('stop-opacity', 0.9);
+
+    svg.append('rect')
+      .attr('x', positionWidth)
+      .attr('y', positionHeight)
+      .attr('width', legendWidth)
+      .attr('height', legendHeight / 2)
+      .attr('fill', 'url(#grad)');
+     
+    var g = svg.append('g')
+      .selectAll('.label')  
+      .data(data)
+      .enter();
+	  
+    g.append('line')
+      .style('stroke', function(d) {
+        return d.color;
+      })
+      .style('stroke-width', 2)
+      .attr('x1',function(d,i){
+        return positionWidth + xPos(i)
+      })
+      .attr('x2',function(d,i){
+        return positionWidth + xPos(i)
+      })
+      .attr('y1',function(d,i){
+        return positionHeight + legendHeight / 2;
+      })
+       .attr('y2',function(d,i){
+        return positionHeight + legendHeight
+      });
+      
+    g.append('text')
+      .text(function(d){
+        return d.label;
+      })
+      .attr('transform',function(d,i){
+        return 'translate(' + ( positionWidth + xPos(i) + 2) + ',' + (positionHeight + (legendHeight)) + ')';
+      })
+      
+    function xPos(i){
+      return (legendWidth / data.length) * i;
+    }
+    
+    svg.append('rect')
+      .attr('x', positionWidth)
+      .attr('y', positionHeight - 25)
+      .attr('width', legendHeight / 2)
+      .attr('height', legendHeight / 2)
+      .attr('fill', "white");
+      
+    svg.append('text')
+      .attr('x', positionWidth + 25)
+      .attr('y', positionHeight - 13)
+      .text("No data");
+      
 }
 
 function redraw() {
