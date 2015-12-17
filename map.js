@@ -171,7 +171,7 @@ function legend(){
       label: '0.75'
     }]
 	
-    var legendWidth = width/4,
+    var legendWidth = width/6,
       legendHeight = height/12;
 	  
 	var positionWidth = -width/2.1,
@@ -203,52 +203,31 @@ function legend(){
       .attr('width', legendWidth)
       .attr('height', legendHeight / 2)
       .attr('fill', 'url(#grad)');
+      
+      
+    svg.append('text')
+       .attr('x', positionWidth)
+      .attr('y', positionHeight + legendHeight)
+      .attr("text-anchor", "left")
+      .text("Lowest");
+      
+      svg.append('text')
+       .attr('x', positionWidth + legendWidth)
+      .attr("text-anchor", "end")
+      .attr('y', positionHeight + legendHeight)
+      .text("Highest");
      
-    var g = svg.append('g')
-      .selectAll('.label')  
-      .data(data)
-      .enter();
-	  
-    g.append('line')
-      .style('stroke', function(d) {
-        return d.color;
-      })
-      .style('stroke-width', 2)
-      .attr('x1',function(d,i){
-        return positionWidth + xPos(i)
-      })
-      .attr('x2',function(d,i){
-        return positionWidth + xPos(i)
-      })
-      .attr('y1',function(d,i){
-        return positionHeight + legendHeight / 2;
-      })
-       .attr('y2',function(d,i){
-        return positionHeight + legendHeight
-      });
-      
-    g.append('text')
-      .text(function(d){
-        return d.label;
-      })
-      .attr('transform',function(d,i){
-        return 'translate(' + ( positionWidth + xPos(i) + 2) + ',' + (positionHeight + (legendHeight)) + ')';
-      })
-      
-    function xPos(i){
-      return (legendWidth / data.length) * i;
-    }
-    
+
     svg.append('rect')
       .attr('x', positionWidth)
-      .attr('y', positionHeight - 25)
+      .attr('y', positionHeight - legendHeight)
       .attr('width', legendHeight / 2)
       .attr('height', legendHeight / 2)
       .attr('fill', "white");
       
     svg.append('text')
-      .attr('x', positionWidth + 25)
-      .attr('y', positionHeight - 13)
+      .attr('x', positionWidth + (0.8*legendHeight))
+      .attr('y', positionHeight - (0.6*legendHeight))
       .text("No data");
       
 }
