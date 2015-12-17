@@ -161,9 +161,6 @@ function draw(topo) {
 function legend(){
 	
 	var data = [{
-      color: 'white',
-      label: 'No Data'
-    }, {
       color: "#deebf7",
       label: '0.25'
     }, {
@@ -241,6 +238,19 @@ function legend(){
     function xPos(i){
       return (legendWidth / data.length) * i;
     }
+    
+    svg.append('rect')
+      .attr('x', positionWidth)
+      .attr('y', positionHeight - 25)
+      .attr('width', legendHeight / 2)
+      .attr('height', legendHeight / 2)
+      .attr('fill', "white");
+      
+    svg.append('text')
+      .attr('x', positionWidth + 25)
+      .attr('y', positionHeight - 13)
+      .text("No data");
+      
 }
 
 function redraw() {
