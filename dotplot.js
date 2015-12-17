@@ -1,3 +1,23 @@
+function zoom(inOrOut, show, hide, fn) {
+  d3.select("#mapContainer")
+  .attr("style", "display: none;");
+  d3.select("#"+hide)
+  .attr("style", "display: none;");
+  d3.select("#"+show)
+  .classed("zoomed", inOrOut)
+  .attr("style", "width: 70%; height: 90%");
+  var d = document.getElementById(show);
+  while(d.firstChild) {
+    console.log("remove");
+    d.removeChild(d.firstChild);
+  }
+  fn(d.clientWidth, d.clientHeight);
+}
+function subGwB(fn) {
+  return function(v) {
+    return fn(v).replace(/G$/, "B");
+  };
+}
 function highlightCountry(name) {
   // enable opacity for every parent
   // enable opacity 1 for selected
@@ -145,7 +165,7 @@ function dotplot(alldata, attributes, ow, oh) {
   });
 
   // Draw size circles
-  var C_R_SEL_X = width;
+  var C_R_SEL_X = width/2;
   var C_R_SEL_Y = -10;
   svg.append("g")
   .attr("transform", "translate("+(C_R_SEL_X+2)+", "+C_R_SEL_Y+")")
@@ -173,7 +193,7 @@ function dotplot(alldata, attributes, ow, oh) {
 
   svg.append("text")
   .attr("class", "dot-r-label")
-  .attr("transform", "translate("+(width-12)+", -7)")
+  .attr("transform", "translate("+(C_R_SEL_X-12)+", -7)")
   .attr("text-anchor", "end")
   .text(attributes.c.label || "None")
   .on("click", function() {
@@ -259,50 +279,17 @@ function dotplot(alldata, attributes, ow, oh) {
     dataFill();
     updatePlot();
   };
-  function zoom() {
-    d3.select("#mapContainer")
-    .attr("style", "display: none;");
-    d3.select("#radarContainer")
-    .attr("style", "display: none;");
-    d3.select("#plotContainer")
-    .classed("zoomed", true)
-    .attr("style", "width: 70%; height: 90%");
-    var d = document.getElementById("plotContainer");
-    while(d.firstChild) {
-      console.log("remove");
-      d.removeChild(d.firstChild);
-    }
-    oh = d.clientHeight;
-    ow = d.clientWidth;
-    dotplot(alldata, attributes, ow, oh);
-  }
-  function unzoom() {
-    d3.select("#mapContainer")
-    .attr("style", "display: inline-block;");
-    d3.select("#radarContainer")
-    .attr("style", "display: inline-block;");
-    d3.select("#plotContainer")
-    .classed("zoomed", false)
-    .attr("style", "");
-    var d = document.getElementById("plotContainer");
-    while(d.firstChild) {
-      d.removeChild(d.firstChild);
-    }
-    oh = d.clientHeight;
-    ow = d.clientWidth;
-    dotplot(alldata, attributes, ow, oh);
-  }
   svg.append("text")
-  .text("resize")
+  .attr("class", "resize-btn")
+  .attr("x", width)
+  .attr("y", -10)
+  .text("⤢")
   .on("click", function() {
     var zoomed = d3.select("#plotContainer").classed("zoomed");
-    if (zoomed) {
-      unzoom();
-    } else {
-      zoom();
-    }
+    zoom(!zoomed, "plotContainer", "radarContainer", function(w, h) {
+      dotplot(alldata, attributes, w, h);
+    });
   });
-  ggg = zoom;
   dotUpdater = attributeUpdater;
   return attributeUpdater;
 };

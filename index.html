@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
     <title>Mconomy</title>
   </head>
   <style>
@@ -172,8 +173,15 @@ div.tooltip {
 #color-attr-picker .detail {
   font-family: monospace;
 }
-.dot-x-label, .dot-y-label, .dot-r-label {
+.dot-x-label, .dot-y-label, .dot-r-label{
   cursor: pointer;
+}
+.resize-btn {
+  cursor: ne-resize;
+  font-size: 1.2em;
+}
+.zoomed .resize-btn {
+  cursor: sw-resize;
 }
   </style>
   <body>
@@ -189,7 +197,7 @@ div.tooltip {
           <div class="col-12 attribute" data="hdi.hdi:,.0f:5">Human Dvelopment Index<br/>(value)</div>
           <div class="col-12 attribute" data="hdi.expectedSchool:,.0f:5">Expected School Years<br/>(years)</div>
           <div class="col-12 attribute" data="hdi.lifeAtBirth:,.0f:5">Life Expectancy at Birth <br/>(years)</div>
-          <div class="col-12 attribute" data="hdi.gni:,.0f:5">Gross National Income <br/>(US$)</div>
+          <div class="col-12 attribute" data="hdi.gni:$,.0f:5">This is wrong!Gross National Income <br/>(Millions US$)</div>
           <div class="col-12 attribute" data="wage:$,.2s:5">Average Wage <br/>(US$)</div>
           <div class="col-12 attribute" data="population:,.1s:3">Population<br/>(total)</div>
         </div>

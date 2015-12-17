@@ -73,7 +73,7 @@ function table(data, ow, h) {
   data = s.data;
   var sorting = s.sorting;
 
-  var format = d3.format(",.0f");
+  var format = subGwB(d3.format(",.0f"));
 
   var x = d3.scale.linear().range([0, w]);
   var y = d3.scale.ordinal().rangeRoundBands([0, h], .1);
@@ -232,7 +232,7 @@ function table(data, ow, h) {
       prev[dMap[curr.name]] = curr;
       return prev;
     }, []);
-    format = d3.format(newFormat) || format;
+    format = subGwB(d3.format(newFormat)) || format;
     sorting = "???";
 
     x.domain([0, d3.max(data, function(d) { return d.value; })]);
