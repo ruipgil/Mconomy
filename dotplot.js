@@ -1,14 +1,22 @@
 function zoom(inOrOut, show, hide, fn) {
+  if (inOrOut) {
+    style = "display: none;";
+  } else {
+    style = "display: inline-block;";
+  }
   d3.select("#mapContainer")
-  .attr("style", "display: none;");
+  .attr("style", style);
   d3.select("#"+hide)
-  .attr("style", "display: none;");
-  d3.select("#"+show)
+  .attr("style", style);
+  var s = d3.select("#"+show)
   .classed("zoomed", inOrOut)
-  .attr("style", "width: 70%; height: 90%");
+  if (inOrOut) {
+    s.attr("style", "width: 70%; height: 90%");
+  } else {
+    s.attr("style", "");
+  }
   var d = document.getElementById(show);
   while(d.firstChild) {
-    console.log("remove");
     d.removeChild(d.firstChild);
   }
   fn(d.clientWidth, d.clientHeight);
@@ -195,7 +203,7 @@ function dotplot(alldata, attributes, ow, oh) {
   .attr("class", "dot-r-label")
   .attr("transform", "translate("+(C_R_SEL_X-12)+", -7)")
   .attr("text-anchor", "end")
-  .text(attributes.c.label || "None")
+  .text(attributes.r.label || "None")
   .on("click", function() {
     axisPopup("r", "radius", true);
   });
