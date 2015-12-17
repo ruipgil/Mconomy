@@ -104,7 +104,7 @@ function dotplot(alldata, attributes, ow, oh) {
     .on("change", function() {
       var v = this.value;
       var parts = v.split(":");
-      attributeUpdater(attribute, parts[0], parts[0], parts[1]);
+      attributeUpdater(attribute, parts[0], this.options[this.selectedIndex].innerHTML, parts[1]);
       ch.attr("style", "display: node");
       h.on("change", null);
       this.value = null;
@@ -259,6 +259,50 @@ function dotplot(alldata, attributes, ow, oh) {
     dataFill();
     updatePlot();
   };
-  ggg = attributeUpdater;
+  function zoom() {
+    d3.select("#mapContainer")
+    .attr("style", "display: none;");
+    d3.select("#radarContainer")
+    .attr("style", "display: none;");
+    d3.select("#plotContainer")
+    .classed("zoomed", true)
+    .attr("style", "width: 70%; height: 90%");
+    var d = document.getElementById("plotContainer");
+    while(d.firstChild) {
+      console.log("remove");
+      d.removeChild(d.firstChild);
+    }
+    oh = d.clientHeight;
+    ow = d.clientWidth;
+    dotplot(alldata, attributes, ow, oh);
+  }
+  function unzoom() {
+    d3.select("#mapContainer")
+    .attr("style", "display: inline-block;");
+    d3.select("#radarContainer")
+    .attr("style", "display: inline-block;");
+    d3.select("#plotContainer")
+    .classed("zoomed", false)
+    .attr("style", "");
+    var d = document.getElementById("plotContainer");
+    while(d.firstChild) {
+      d.removeChild(d.firstChild);
+    }
+    oh = d.clientHeight;
+    ow = d.clientWidth;
+    dotplot(alldata, attributes, ow, oh);
+  }
+  svg.append("text")
+  .text("resize")
+  .on("click", function() {
+    var zoomed = d3.select("#plotContainer").classed("zoomed");
+    if (zoomed) {
+      unzoom();
+    } else {
+      zoom();
+    }
+  });
+  ggg = zoom;
+  dotUpdater = attributeUpdater;
   return attributeUpdater;
 };
