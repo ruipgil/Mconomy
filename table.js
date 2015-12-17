@@ -1,6 +1,5 @@
 /*
  * TODO
- *  + fix format representation
  *  + keep x axis fixed on top
  */
 var sortTable = {
@@ -66,7 +65,7 @@ var selection = {};
 function table(data, ow, h) {
   var originalData = data;
 
-  var m = [30, 10, 10, 120];
+  var m = [11, 10, 10, 120];
   var w = ow - m[1] - m[3];
   var h = 930*2 - m[0] - m[2];
 

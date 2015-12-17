@@ -9,6 +9,25 @@ function highlightCountry(name) {
   c.each(function() {
     this.parentNode.appendChild(this);
   });
+  d3.selectAll("#color-attr-picker .detail")
+  .each(function() {
+    var t = d3.select(this);
+    var a = t.attr("data").split(":");
+    var s = a[0].split(".");
+    var format = s[0]=="name"?function(a){return a;}:d3.format(a[1]||",.0f");
+    var d = "";
+    if (!gMapData[name]) {
+      t.text(d);
+      return;
+    }
+
+    if (s.length==2) {
+      d = format(gMapData[name][s[0]][s[1]]);
+    } else {
+      d = format(gMapData[name][s[0]]);
+    }
+    t.text(d);
+  });
 }
 function dehighlightCountry(name) {
   var c = d3.selectAll('[data-country="'+name+'"]');

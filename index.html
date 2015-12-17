@@ -104,12 +104,12 @@ div.tooltip {
 }
 #mapContainer {
   width: 70%;
-  height: 60%;
+  height: 50%;
   display: inline-block;
 }
 #tableContainer {
   width: 30%;
-  height: 100%;
+  height: 90%;
   float: right;
   overflow: scroll;
 }
@@ -147,29 +147,67 @@ div.tooltip {
   padding-right: 1em;
   background-color: rgba(238,238,238, 0.8);
 }
-
+#color-attr-picker {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+#color-attr-picker {
+  height: 10%;
+}
+#color-attr-picker .col-12 {
+  vertical-align: middle;
+  width: 8%;
+  display: inline-block;
+  margin: 0;
+  text-align: center;
+  cursor: pointer;
+}
+#color-attr-picker .attribute:hover{
+  text-decoration: underline;
+}
+#color-attr-picker .title {
+  font-size: 1.8em;
+}
+#color-attr-picker .detail {
+  font-family: monospace;
+  }
   </style>
   <body>
     <div id="containers">
+      <div id="color-attr-picker">
+        <div class="attrs">
+          <div class="col-12 title">Mconomy</div>
+          <div class="col-12 attribute" data="nMacs.percapita:,.0f:5">McDonalds<br/>(per capita)</div>
+          <div class="col-12 attribute" data="nMacs.value:,.0f:5">McDonalds <br/>(total)</div>
+          <div class="col-12 attribute" data="bigmacIndex.burgersPerWage:,.0f:5">Burgers per Wage<br/>(total)</div>
+          <div class="col-12 attribute" data="bigmacIndex.dollar:,.1$:5">BigMac Index<br/>($US)</div>
+          <div class="col-12 attribute" data="gdp.percapita:$,.2s:5">GDP <br/>($ per capita)</div>
+          <div class="col-12 attribute" data="hdi.hdi:,.0f:5">Human Dvelopment Index<br/>(value)</div>
+          <div class="col-12 attribute" data="hdi.expectedSchool:,.0f:5">Expected School Years<br/>(years)</div>
+          <div class="col-12 attribute" data="hdi.lifeAtBirth:,.0f:5">Life Expectancy at Birth <br/>(years)</div>
+          <div class="col-12 attribute" data="hdi.gni:,.0f:5">Gross National Income <br/>(US$)</div>
+          <div class="col-12 attribute" data="wage:$,.2s:5">Average Wage <br/>(US$)</div>
+          <div class="col-12 attribute" data="population:,.1s:3">Population<br/>(total)</div>
+        </div>
+        <div class="overview">
+          <div class="col-12 detail" data="name"></div>
+          <div class="col-12 detail" data="nMacs.percapita:,.0f:5"></div>
+          <div class="col-12 detail" data="nMacs.value:,.0f:5"></div>
+          <div class="col-12 detail" data="bigmacIndex.burgersPerWage:,.0f:5"></div>
+          <div class="col-12 detail" data="bigmacIndex.toUs:,.1%:5"></div>
+          <div class="col-12 detail" data="gdp.percapita:,.2s:5"></div>
+          <div class="col-12 detail" data="hdi.hdi:,.0f:5"></div>
+          <div class="col-12 detail" data="hdi.expectedSchool:,.0f:5"></div>
+          <div class="col-12 detail" data="hdi.lifeAtBirth:,.0f:5"></div>
+          <div class="col-12 detail" data="hdi.gni:,.0f:5"></div>
+          <div class="col-12 detail" data="wage:,.2s:5"></div>
+          <div class="col-12 detail" data="population:,.1s:3"></div>
+        </div>
+      </div>
       <div id="mapContainer">
       </div>
       <div id="tableContainer">
-        <div>
-          <select id="table-changer">
-            <option value="nMacs.percapita:,.0f:5">McsPercapita</option>
-            <option value="nMacs.value:,.0f:5">Number of mcdonalds</option>
-            <option value="bigmacIndex.burgersPerWage:,.0f:5">Burgers per wage</option>
-            <option value="bigmacIndex.toUs:,.1%:5">Burger price compared to United States</option>
-            <option value="gdp.percapita:$,.2s:5">GDP per capita</option>
-            <option value="hdi.hdi:,.0f:5">Human Development Index</option>
-            <option value="hdi.expectedSchool:,.0f:5">Expected School years</option>
-            <option value="hdi.lifeAtBirth:,.0f:5">Life expectancy at birth</option>
-            <option value="hdi.meanSchool:,.0f:5">Mean school years</option>
-            <option value="hdi.gni:,.0f:5">GNI</option>
-            <option value="wage:$,.2s:5">Wage</option>
-            <option value="population:,.1s:3">Population</option>
-          </select>
-        </div>
       </div>
       <div id="plotContainer">
         <div id="axis-sel-overlay">
@@ -232,9 +270,10 @@ div.tooltip {
             }
           }, p.clientWidth, p.clientHeight);
             var tableUpdater = table(data.map(function(d) { return { name: d.name, value: d.nMacs.percapita }; }), t.clientWidth, window.innerHeight*4);
-            document.querySelector("#table-changer").addEventListener("change", function(e) {
-                var option = e.target.value;
-                var vals = option.split(':');
+            d3.selectAll("#color-attr-picker .attribute")
+            .on("click", function() {
+              var v = d3.select(this).attr("data");
+                var vals = v.split(':');
                 var fields = vals[0].split('.');
                 var mapper;
                 if (fields.length == 2) {
@@ -253,11 +292,9 @@ div.tooltip {
                         });
                       }
                 tableUpdater(mapper, vals[1]?vals[1]:",.0f", vals[2]?vals[2]:undefined);
-				updateMapIndex(tablechanger.options[tablechanger.selectedIndex].text);
-        dotUpdater("x", vals[0], vals[0]);
+				//updateMapIndex(tablechanger.options[tablechanger.selectedIndex].text);
+        dotUpdater("c", vals[0], vals[0]);
 				map.redraw();
-
-
             });
 	  var countryMap = data.reduce(function(prev, curr) {
 	    prev[curr.name] = curr;
@@ -277,7 +314,7 @@ div.tooltip {
 
       })(window.d3);
 
-	updateMapIndex(tablechanger.options[tablechanger.selectedIndex].text);
+	updateMapIndex("McsPercapita");
     map("#mapContainer","world-topo.json");
 
     </script>
