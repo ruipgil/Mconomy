@@ -372,16 +372,4 @@ function RadarChart(id, data, options, selection) {
 
 // -- FIM Legenda --
 
-
-  svg.append("text")
-  .attr("class", "resize-btn")
-  .attr("x", cfg.w*2)
-  .attr("y", 10)
-  .text("⤢")
-  .on("click", function() {
-    var zoomed = d3.select("#radarContainer").classed("zoomed");
-    zoom(!zoomed, "radarContainer","plotContainer", function(w, h) {
-      radar(id, data, selection);
-    });
-  });
 }//RadarChart
