@@ -352,10 +352,12 @@ function RadarChart(id, data, options, selection) {
  // var widthLeg = document.getElementById('plotContainer').clientWidth;
   //console.log(heightLeg + " " + widthLeg);
 
+  var ww = cfg.w + cfg.margin.left + 10;
+  var hh = (cfg.h/2) + 10 ;
   svg.append("g")
     .attr("class", "legendOrdinal")
     //.attr("transform", "translate(" + heightLeg + "," + widthLeg + ")");
-    .attr("transform", "translate(10, 10)");
+    .attr("transform", "translate("+ ww +","+ hh+")");
 
   var legendOrdinal = d3.legend.color()
     //d3 symbol creates a path-string, for example
