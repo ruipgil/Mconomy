@@ -101,10 +101,15 @@ function dotplot(alldata, attributes, ow, oh) {
   .range([height, 0]);
 
   var rMax = d3.max(data.map(function(d) { return d.r; }));
+  var rMin = d3.min(data.map(function(d) { return d.r; }));
   var r = d3.scale.linear()
   .domain([0, 0.5, 1]);
 
   var cMax = d3.max(data.map(function(d) { return d.c; }));
+  var cMin = d3.min(data.map(function(d) { return d.c; }));
+
+  var rDt = rMax-rMin;
+  var cDt = cMax-cMin;
   var c = d3.scale.linear()
   .domain([0, 0.5, 1])
   .range(["#deebf7","#9ecae1","#3182bd"]);
@@ -224,11 +229,11 @@ function dotplot(alldata, attributes, ow, oh) {
   .attr("stroke", "black")
   .attr("stroke-width", 0)
   .attr("d", function(d) {
-    var a = d3.svg.symbol().type("circle").size(d.r?r(d.r/rMax)*512:64)();
+    var a = d3.svg.symbol().type("circle").size(d.r?r((d.r-rMin)/rDt)*512:64)();
     return a;
   })
   .attr("fill", function(d) {
-    return c(d.c/cMax || 0);
+    return c((d.c-cMin)/cDt || 0);
   })
   .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; })
   .on("mouseenter", function(d) {
@@ -265,16 +270,21 @@ function dotplot(alldata, attributes, ow, oh) {
 
     rMax = d3.max(data.map(function(d) { return d.r; }));
     cMax = d3.max(data.map(function(d) { return d.c; }));
+    rMin = d3.min(data.map(function(d) { return d.r; }));
+    cMin = d3.min(data.map(function(d) { return d.c; }));
+    rDt = rMax-rMin+1;
+    cDt = cMax-cMin+1;
     point
     .data(data)
     .transition()
     .duration(750)
     .attr("d", function(d) {
-      var a = d3.svg.symbol().type("circle").size(d.r?r(d.r/rMax)*512:64)();
+
+      var a = d3.svg.symbol().type("circle").size(d.r?r((d.r-rMin)/rDt)*512:64)();
       return a;
     })
     .attr("fill", function(d) {
-      return c(d.c/cMax || 0);
+      return c((d.c-cMin)/cDt || 0);
     })
     .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
   }
