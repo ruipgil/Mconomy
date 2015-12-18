@@ -1,14 +1,22 @@
 function zoom(inOrOut, show, hide, fn) {
+  if (inOrOut) {
+    style = "display: none;";
+  } else {
+    style = "display: inline-block;";
+  }
   d3.select("#mapContainer")
-  .attr("style", "display: none;");
+  .attr("style", style);
   d3.select("#"+hide)
-  .attr("style", "display: none;");
-  d3.select("#"+show)
+  .attr("style", style);
+  var s = d3.select("#"+show)
   .classed("zoomed", inOrOut)
-  .attr("style", "width: 70%; height: 90%");
+  if (inOrOut) {
+    s.attr("style", "width: 70%; height: 90%");
+  } else {
+    s.attr("style", "");
+  }
   var d = document.getElementById(show);
   while(d.firstChild) {
-    console.log("remove");
     d.removeChild(d.firstChild);
   }
   fn(d.clientWidth, d.clientHeight);
@@ -93,10 +101,15 @@ function dotplot(alldata, attributes, ow, oh) {
   .range([height, 0]);
 
   var rMax = d3.max(data.map(function(d) { return d.r; }));
+  var rMin = d3.min(data.map(function(d) { return d.r; }));
   var r = d3.scale.linear()
   .domain([0, 0.5, 1]);
 
   var cMax = d3.max(data.map(function(d) { return d.c; }));
+  var cMin = d3.min(data.map(function(d) { return d.c; }));
+
+  var rDt = rMax-rMin;
+  var cDt = cMax-cMin;
   var c = d3.scale.linear()
   .domain([0, 0.5, 1])
   .range(["#deebf7","#9ecae1","#3182bd"]);
@@ -149,7 +162,7 @@ function dotplot(alldata, attributes, ow, oh) {
   .attr("class", "dot-y-label")
   .attr("transform", "rotate(-90), translate(-"+(height/2-margin.top/2)+", -50)")
   .attr("text-anchor", "middle")
-  .text(attributes.y.label)
+  .text(attributes.y.label+" ▼")
   .on("click", function() {
     axisPopup("y", "y axis");
   });
@@ -159,7 +172,7 @@ function dotplot(alldata, attributes, ow, oh) {
   .attr("class", "dot-x-label")
   .attr("transform", "translate("+(width/2+margin.left/2-10)+", "+(height+margin.bottom-10)+")")
   .attr("text-anchor", "middle")
-  .text(attributes.x.label)
+  .text(attributes.x.label+" ▼")
   .on("click", function() {
     axisPopup("x", "x axis");
   });
@@ -195,7 +208,7 @@ function dotplot(alldata, attributes, ow, oh) {
   .attr("class", "dot-r-label")
   .attr("transform", "translate("+(C_R_SEL_X-12)+", -7)")
   .attr("text-anchor", "end")
-  .text(attributes.c.label || "None")
+  .text("▼ "+(attributes.r.label || "None"))
   .on("click", function() {
     axisPopup("r", "radius", true);
   });
@@ -216,11 +229,11 @@ function dotplot(alldata, attributes, ow, oh) {
   .attr("stroke", "black")
   .attr("stroke-width", 0)
   .attr("d", function(d) {
-    var a = d3.svg.symbol().type("circle").size(d.r?r(d.r/rMax)*512:64)();
+    var a = d3.svg.symbol().type("circle").size(d.r?r((d.r-rMin)/rDt)*512:64)();
     return a;
   })
   .attr("fill", function(d) {
-    return c(d.c/cMax || 0);
+    return c((d.c-cMin)/cDt || 0);
   })
   .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; })
   .on("mouseenter", function(d) {
@@ -247,26 +260,31 @@ function dotplot(alldata, attributes, ow, oh) {
     .call(yAxis);
 
     d3.select(".dot-y-label")
-    .text(attributes.y.label);
+    .text(attributes.y.label+" ▼");
 
     d3.select(".dot-x-label")
-    .text(attributes.x.label);
+    .text(attributes.x.label+" ▼");
 
     d3.select(".dot-r-label")
-    .text(attributes.r.label || "None");
+    .text("▼ "+(attributes.r.label || "None"));
 
     rMax = d3.max(data.map(function(d) { return d.r; }));
     cMax = d3.max(data.map(function(d) { return d.c; }));
+    rMin = d3.min(data.map(function(d) { return d.r; }));
+    cMin = d3.min(data.map(function(d) { return d.c; }));
+    rDt = rMax-rMin+1;
+    cDt = cMax-cMin+1;
     point
     .data(data)
     .transition()
     .duration(750)
     .attr("d", function(d) {
-      var a = d3.svg.symbol().type("circle").size(d.r?r(d.r/rMax)*512:64)();
+
+      var a = d3.svg.symbol().type("circle").size(d.r?r((d.r-rMin)/rDt)*512:64)();
       return a;
     })
     .attr("fill", function(d) {
-      return c(d.c/cMax || 0);
+      return c((d.c-cMin)/cDt || 0);
     })
     .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
   }

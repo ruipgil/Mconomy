@@ -22,8 +22,8 @@ function radar(id, data, selection) {
       if(countryDataMap[selection[i]].gdp.percapita > maxValues[3]){
         maxValues[3] = countryDataMap[selection[i]].gdp.percapita;
       }
-      if(countryDataMap[selection[i]].bmi[">=25.0"] > maxValues[4]){
-        maxValues[4] = countryDataMap[selection[i]].bmi[">=25.0"];
+      if(countryDataMap[selection[i]].bmi[">=25"] > maxValues[4]){
+        maxValues[4] = countryDataMap[selection[i]].bmi[">=25"];
       }
       if(countryDataMap[selection[i]].death.macsPer > maxValues[5]){
         maxValues[5] = countryDataMap[selection[i]].death.macsPer;
@@ -39,7 +39,7 @@ function radar(id, data, selection) {
     {axis: "HDI", value: countryDataMap[selection[i]].hdi.hdi / maxValues[1]},
     {axis: "BurgersPerWage", value: countryDataMap[selection[i]].bigmacIndex.burgersPerWage / maxValues[2] },
     {axis: "GDPPerCapita", value: countryDataMap[selection[i]].gdp.percapita / maxValues[3] },
-    {axis: "BMI>25", value: countryDataMap[selection[i]].bmi[">=25.0"] / maxValues[4] },
+    {axis: "BMI>25", value: countryDataMap[selection[i]].bmi[">=25"] / maxValues[4] },
     {axis: "MacsPerDeath", value: countryDataMap[selection[i]].death.macsPer / maxValues[5] }]
     }
 
@@ -352,10 +352,12 @@ function RadarChart(id, data, options, selection) {
  // var widthLeg = document.getElementById('plotContainer').clientWidth;
   //console.log(heightLeg + " " + widthLeg);
 
+  var ww = cfg.w + cfg.margin.left + 10;
+  var hh = (cfg.h/2) + 10 ;
   svg.append("g")
     .attr("class", "legendOrdinal")
     //.attr("transform", "translate(" + heightLeg + "," + widthLeg + ")");
-    .attr("transform", "translate(10, 10)");
+    .attr("transform", "translate("+ ww +","+ hh+")");
 
   var legendOrdinal = d3.legend.color()
     //d3 symbol creates a path-string, for example

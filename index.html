@@ -183,36 +183,39 @@ div.tooltip {
 .zoomed .resize-btn {
   cursor: sw-resize;
 }
+.attribute-selected {
+  text-decoration: underline;
+}
   </style>
   <body>
     <div id="containers">
       <div id="color-attr-picker">
         <div class="attrs">
           <div class="col-12 title">Mconomy</div>
-          <div class="col-12 attribute" data="nMacs.percapita:,.0f:5">McDonalds<br/>(per capita)</div>
-          <div class="col-12 attribute" data="nMacs.value:,.0f:5">McDonalds <br/>(total)</div>
+          <div class="col-12 attribute attribute-selected" data="nMacs.percapita:,.0f:5">McDonalds<br/>(per capita)</div>
+          <div class="col-12 attribute" data="wage:$,.2s:5">Average Wage <br/>($US)</div>
           <div class="col-12 attribute" data="bigmacIndex.burgersPerWage:,.0f:5">Burgers per Wage<br/>(total)</div>
           <div class="col-12 attribute" data="bigmacIndex.dollar:$,.2f:5">BigMac Index<br/>($US)</div>
           <div class="col-12 attribute" data="gdp.percapita:$,.2s:5">GDP <br/>($ per capita)</div>
           <div class="col-12 attribute" data="hdi.hdi:,.0f:5">Human Dvelopment Index<br/>(value)</div>
           <div class="col-12 attribute" data="hdi.expectedSchool:,.0f:5">Expected School Years<br/>(years)</div>
           <div class="col-12 attribute" data="hdi.lifeAtBirth:,.0f:5">Life Expectancy at Birth <br/>(years)</div>
-          <div class="col-12 attribute" data="hdi.gni:$,.0f:5">This is wrong!Gross National Income <br/>(Millions US$)</div>
-          <div class="col-12 attribute" data="wage:$,.2s:5">Average Wage <br/>(US$)</div>
+          <div class="col-12 attribute" data="bmi.>=25:,.0f:5">Obesity rate <br/>(% with BMI>=25)</div>
+          <div class="col-12 attribute" data="death.value:,.0f:5">Deaths related with cardiovascular diseases <br/>(%)</div>
           <div class="col-12 attribute" data="population:,.1s:3">Population<br/>(total)</div>
         </div>
         <div class="overview">
           <div class="col-12 detail" data="name"></div>
           <div class="col-12 detail" data="nMacs.percapita:,.0f:5"></div>
-          <div class="col-12 detail" data="nMacs.value:,.0f:5"></div>
+          <div class="col-12 detail" data="wage:,.2s:5"></div>
           <div class="col-12 detail" data="bigmacIndex.burgersPerWage:,.0f:5"></div>
           <div class="col-12 detail" data="bigmacIndex.dollar:$,.2f:5"></div>
           <div class="col-12 detail" data="gdp.percapita:,.2s:5"></div>
           <div class="col-12 detail" data="hdi.hdi:,.0f:5"></div>
           <div class="col-12 detail" data="hdi.expectedSchool:,.0f:5"></div>
           <div class="col-12 detail" data="hdi.lifeAtBirth:,.0f:5"></div>
-          <div class="col-12 detail" data="hdi.gni:,.0f:5"></div>
-          <div class="col-12 detail" data="wage:,.2s:5"></div>
+          <div class="col-12 detail" data="bmi.>=25:,.0f:5"></div>
+          <div class="col-12 detail" data="death.value:,.0f:5"></div>
           <div class="col-12 detail" data="population:,.1s:3"></div>
         </div>
       </div>
@@ -221,25 +224,25 @@ div.tooltip {
       <div id="tableContainer">
       </div>
       <div id="plotContainer">
+      </div>
         <div id="axis-sel-overlay">
           <div>Select an attribute to the <span class="axis-sp">x axis</span></div>
 
           <select id="overlay-changer">
             <option value="" id="none-option">None</option>
             <option class="col-12 attribute" value="nMacs.percapita:,.0f:5">McDonalds <br/>(per capita)</option>
-            <option class="col-12 attribute" value="nMacs.value:,.0f:5">McDonalds <br/>(total)</option>
+            <option class="col-12 attribute" value="wage:$,.2s:5">Average Wage <br/> (US$)</option>
             <option class="col-12 attribute" value="bigmacIndex.burgersPerWage:,.0f:5">Burgers per Wage <br/>(total)</option>
             <option class="col-12 attribute" value="bigmacIndex.dollar:$,.2f:5">BigMac Index <br/>($US)</option>
             <option class="col-12 attribute" value="gdp.percapita:$,.2s:5">GDP <br/>($ per capita)</option>
             <option class="col-12 attribute" value="hdi.hdi:,.0f:5">Human Dvelopment Index<br/> (value)</option>
             <option class="col-12 attribute" value="hdi.expectedSchool:,.0f:5">Expected School Years<br/> (years)</option>
             <option class="col-12 attribute" value="hdi.lifeAtBirth:,.0f:5">Life Expectancy at Birth <br/> (years)</option>
-            <option class="col-12 attribute" value="hdi.gni:,.0f:5">Gross National Income <br/> (US$)</option>
-            <option class="col-12 attribute" value="wage:$,.2s:5">Average Wage <br/> (US$)</option>
+            <option class="col-12 attribute" value="bmi.>=25:,.0f:5">Obesity rate <br/>(%)</option>
+            <option class="col-12 attribute" value="death.value:,.0f:5">Deaths related with cardiovascular diseases <br/>(%)</option>
             <option class="col-12 attribute" value="population:,.1s:3">Population<br/> (total)</option>
           </select>
         </div>
-      </div>
       <div id="radarContainer">
       </div>
     </div>
@@ -283,6 +286,9 @@ div.tooltip {
             var tableUpdater = table(data.map(function(d) { return { name: d.name, value: d.nMacs.percapita }; }), t.clientWidth, window.innerHeight*4);
             d3.selectAll("#color-attr-picker .attribute")
             .on("click", function() {
+              d3.selectAll(".attribute")
+              .classed("attribute-selected", false);
+              d3.select(this).classed("attribute-selected", true);
               var v = d3.select(this).attr("data");
                 var vals = v.split(':');
                 var fields = vals[0].split('.');
