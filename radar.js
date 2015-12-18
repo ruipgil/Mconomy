@@ -25,8 +25,8 @@ function radar(id, data, selection) {
       if(countryDataMap[selection[i]].bmi[">=25"] > maxValues[4]){
         maxValues[4] = countryDataMap[selection[i]].bmi[">=25"];
       }
-      if(countryDataMap[selection[i]].death.macsPer > maxValues[5]){
-        maxValues[5] = countryDataMap[selection[i]].death.macsPer;
+      if(countryDataMap[selection[i]].death.value > maxValues[5]){
+        maxValues[5] = countryDataMap[selection[i]].death.value;
       }
 
    }
@@ -35,18 +35,18 @@ function radar(id, data, selection) {
 
     var dataRadar = new Array(selection.length);
     for(var i = 0; i < selection.length; i++){
-     dataRadar[i] = [{axis: "nrMacsCapita", value: countryDataMap[selection[i]].nMacs.percapita / maxValues[0]},
+     dataRadar[i] = [{axis: "Nr of Macs per Capita", value: countryDataMap[selection[i]].nMacs.percapita / maxValues[0]},
     {axis: "HDI", value: countryDataMap[selection[i]].hdi.hdi / maxValues[1]},
-    {axis: "BurgersPerWage", value: countryDataMap[selection[i]].bigmacIndex.burgersPerWage / maxValues[2] },
-    {axis: "GDPPerCapita", value: countryDataMap[selection[i]].gdp.percapita / maxValues[3] },
-    {axis: "BMI>25", value: countryDataMap[selection[i]].bmi[">=25"] / maxValues[4] },
-    {axis: "MacsPerDeath", value: countryDataMap[selection[i]].death.macsPer / maxValues[5] }]
+    {axis: "Burgers Per Wage", value: countryDataMap[selection[i]].bigmacIndex.burgersPerWage / maxValues[2] },
+    {axis: "Deaths from cardiovascular diseases", value: countryDataMap[selection[i]].death.value / maxValues[5] },
+    {axis: "Obesity Rate", value: countryDataMap[selection[i]].bmi[">=25"] / maxValues[4] },
+    {axis: "GDP Per Capita", value: countryDataMap[selection[i]].gdp.percapita / maxValues[3] }]
     }
 
     //console.log(dataRadar);
 
 
-    var margin = {top: 30, right: 70, bottom: 50, left: 50},
+    var margin = {top: 30, right: 70, bottom: 70, left: 50},
         width = document.getElementById('radarContainer').clientWidth - margin.right - margin.left,
         height = document.getElementById('radarContainer').clientHeight - margin.top - margin.bottom ;
 
